@@ -1,0 +1,79 @@
+package com.iteso.roma.utils;
+
+import jade.core.AID;
+import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+
+public class AIDManager {
+	public static  AID getStageAID(int stageId, Agent theAgent){
+		// Search stage service receiver
+		DFAgentDescription template = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("stage-" + stageId);
+		template.addServices(sd);
+		AID receiver =  null;
+		try {
+			DFAgentDescription[] result = DFService.search(theAgent, template); 
+			if(result.length > 0) receiver = result[0].getName();
+		}
+		catch (FIPAException fe) {
+			fe.printStackTrace();
+		}
+		return receiver;
+	}
+	
+	public static AID getIntersectionAID(int intersectionId, Agent theAgent){
+		// Search stage service receiver
+		DFAgentDescription template = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("intersection-" + intersectionId);
+		template.addServices(sd);
+		AID receiver =  null;
+		try {
+			DFAgentDescription[] result = DFService.search(theAgent, template); 
+			if(result.length > 0) receiver = result[0].getName();
+		}
+		catch (FIPAException fe) {
+			fe.printStackTrace();
+		}
+		return receiver;
+	}
+	
+	public static AID getStreetAID(int streetId, Agent theAgent){
+		// Search stage service receiver
+		DFAgentDescription template = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("street-" + streetId);
+		template.addServices(sd);
+		AID receiver =  null;
+		try {
+			DFAgentDescription[] result = DFService.search(theAgent, template); 
+			if(result.length > 0) receiver = result[0].getName();
+		}
+		catch (FIPAException fe) {
+			fe.printStackTrace();
+		}
+		return receiver;
+	}
+	
+	public static AID getAutomobileAID(int automobileId, Agent theAgent){
+		// Search stage service receiver
+		DFAgentDescription template = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("automobile-" + automobileId);
+		template.addServices(sd);
+		AID receiver =  null;
+		try {
+			DFAgentDescription[] result = DFService.search(theAgent, template); 
+			if(result.length > 0) receiver = result[0].getName();
+		}
+		catch (FIPAException fe) {
+			fe.printStackTrace();
+		}
+		return receiver;
+	}
+
+}
