@@ -18,6 +18,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 // CHECANDO GIT
+// PARA ESTUDIANTE
 
 public class AutomobileAgent extends Agent{
 
