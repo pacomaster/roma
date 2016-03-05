@@ -17,7 +17,6 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
-// CHECANDO GIT
 
 public class AutomobileAgent extends Agent{
 
