@@ -3,6 +3,7 @@ package com.iteso.roma.agents;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.iteso.roma.components.StreetNode;
 import com.iteso.roma.utils.ACLMessageFactory;
 import com.iteso.roma.utils.AIDManager;
 
@@ -17,6 +18,11 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 public class StreetAgent extends Agent{
+	
+	private final int CAR_SPACE = 100;
+	private final int CAR_LENGTH = 500;
+	private final int LANE_LENGTH = 70000;	
+	private final int MPS = 11; 
 
 	private int streetId;
 	private int intersectionId;
@@ -25,8 +31,12 @@ public class StreetAgent extends Agent{
 	private ArrayList<Integer> nextStreetId;
 	private ArrayList<Integer> maxLaneCapacity;
 	private ArrayList<Integer> stageIds;
+	private ArrayList<Integer> laneLength;
 	private ArrayList<Integer> lanePriority; //Start at 1
 	private int AutomobilesNextCycle = 5;
+	
+	private ArrayList<StreetNode> in;
+	private ArrayList<StreetNode> out;
 	
 	// ARGS
 	// (streetId, intersectionId, no. lanes, nextStreetIds ..., maxLaneCapacity ..., stageIds ... )
@@ -35,6 +45,7 @@ public class StreetAgent extends Agent{
 		lanesQueue =  new ArrayList<ArrayList<Integer>>();
 		nextStreetId =  new ArrayList<Integer>();
 		maxLaneCapacity =  new ArrayList<Integer>();
+		laneLength =  new ArrayList<Integer>();
 		stageIds =  new ArrayList<Integer>();
 		lanePriority =  new ArrayList<Integer>();
 		if(args.length > 0){
@@ -55,6 +66,7 @@ public class StreetAgent extends Agent{
 				j++;
 				stageIds.add(Integer.parseInt((String)args[j]));
 				lanePriority.add(1);
+				laneLength.add(LANE_LENGTH);
 			}
 		}
 		
@@ -170,15 +182,14 @@ public class StreetAgent extends Agent{
 					int nextId = Integer.parseInt(content.split("-")[1]);
 					int index = nextStreetId.indexOf(nextId);
 					(lanesQueue.get(index)).add(automobileId);
+					laneLength.set(index, (lanesQueue.get(index).size() * CAR_LENGTH) + (lanesQueue.get(index).size() * CAR_SPACE));
 					
 					// Calculate capacity
 					AutomobilesNextCycle = 5;
 					
-					
-					
 					ACLMessage reply = msg.createReply();
 					reply.setPerformative(ACLMessage.INFORM);
-					reply.setContent(Integer.toString(index));
+					reply.setContent(Integer.toString(index) + "-" + Integer.toString(laneLength.get(index)) + "-" + Integer.toString(MPS));
 					myAgent.send(reply);
 				}
 			}

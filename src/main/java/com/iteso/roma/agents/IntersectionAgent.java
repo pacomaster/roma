@@ -19,6 +19,7 @@ import java.util.Queue;
 
 import com.iteso.roma.utils.ACLMessageFactory;
 import com.iteso.roma.utils.AIDManager;
+import com.iteso.roma.utils.TimeManager;
 
 public class IntersectionAgent extends Agent{
 	
@@ -85,7 +86,7 @@ public class IntersectionAgent extends Agent{
 		addBehaviour(new RequestChangePriority());
 		
 		// Add a TickerBehaviour that stage time
-		addBehaviour(new TickerBehaviour(this, 100) {
+		addBehaviour(new TickerBehaviour(this, TimeManager.getSeconds(1)) {
 			protected void onTick() {
 				secondsLeft--;
 				// System.out.println("IntAge" + intersectionId  + " serving StgAge" + stagesIds.get(0).toString() + " " + secondsLeft + "sec.");

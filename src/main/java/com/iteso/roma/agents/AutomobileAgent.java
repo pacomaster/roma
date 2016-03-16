@@ -2,8 +2,10 @@ package com.iteso.roma.agents;
 
 import java.util.ArrayList;
 
+import com.iteso.roma.enums.AutomobileStateEnum;
 import com.iteso.roma.utils.ACLMessageFactory;
 import com.iteso.roma.utils.AIDManager;
+import com.iteso.roma.utils.TimeManager;
 
 import jade.core.AID;
 import jade.core.Agent;
@@ -19,6 +21,9 @@ import jade.lang.acl.MessageTemplate;
 
 
 public class AutomobileAgent extends Agent{
+	
+	public final int CAR_LENGTH = 500;
+	public final int INF = Integer.MAX_VALUE;
 
 	private int automobileId;
 	private int streetId;
@@ -29,8 +34,11 @@ public class AutomobileAgent extends Agent{
 	
 	private int secondsToAppear;
 	private int secondsToCross;
+	private int secondsToStop;
 	
-	public float CAR_LENGTH = 5.0f;
+	private int mps;
+	
+	private AutomobileStateEnum state = AutomobileStateEnum.STOP;	
 	
 	// ARGS
 	// (automobileId, streetId, startStreetId, endStreetId, secondsToAppear)
@@ -43,7 +51,8 @@ public class AutomobileAgent extends Agent{
 			this.endStreetId = Integer.parseInt((String)args[3]);
 			this.secondsToAppear = Integer.parseInt((String)args[4]);
 			this.lane = 0;
-			this.secondsToCross = 0; 
+			this.secondsToCross = 0;
+			this.secondsToStop = INF;
 		}
 		
 		// System.out.println("AutAge" + this.automobileId + " created");
@@ -64,12 +73,17 @@ public class AutomobileAgent extends Agent{
 		
 		addBehaviour(new InformCross());
 		
-		addBehaviour(new TickerBehaviour(this, 100) {
+		addBehaviour(new TickerBehaviour(this, TimeManager.getSeconds(1)) {
 			protected void onTick() {
 				secondsToAppear--;
+				secondsToStop--;
 				if(secondsToAppear == 0){
 					//// System.out.println("AutAge" + automobileId + " enters the system");
 					myAgent.addBehaviour(new RequestLane());
+					state = AutomobileStateEnum.MOVING;
+				}
+				if(secondsToStop == 0){
+					state = AutomobileStateEnum.WAITING;
 				}
 			}
 		});	
@@ -116,7 +130,11 @@ public class AutomobileAgent extends Agent{
 						String conversationId = msg.getConversationId();
 						// Validate change request
 						if(conversationId.equals("request-lane")){
-							lane = Integer.parseInt(msg.getContent());
+							String[] message = msg.getContent().split("-");
+							lane = Integer.parseInt(message[0]);
+							int distance = Integer.parseInt(message[1]);
+							int mps = Integer.parseInt(message[2]);
+							secondsToStop = distance / mps;
 							step++;
 						}
 					}
