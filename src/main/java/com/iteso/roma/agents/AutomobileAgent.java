@@ -26,33 +26,39 @@ public class AutomobileAgent extends Agent{
 	public final int INF = Integer.MAX_VALUE;
 
 	private int automobileId;
-	private int streetId;
+	private int currentStreetId;
+	private int nextStreetId;
 	private int lane;
+	
+	private int distanceToNextStreet;
 	
 	private int startStreetId;
 	private int endStreetId;
 	
 	private int secondsToAppear;
 	private int secondsToCross;
-	private int secondsToStop;
 	
 	private int mps;
 	
 	private AutomobileStateEnum state = AutomobileStateEnum.STOP;	
 	
 	// ARGS
-	// (automobileId, streetId, startStreetId, endStreetId, secondsToAppear)
+	// (automobileId, startStreetId, endStreetId, secondsToAppear)
 	protected void setup(){
 		Object[] args =  getArguments();
 		if(args.length > 0){
 			this.automobileId = Integer.parseInt((String)args[0]);
-			this.streetId = Integer.parseInt((String)args[1]);
-			this.startStreetId = Integer.parseInt((String)args[2]);
-			this.endStreetId = Integer.parseInt((String)args[3]);
-			this.secondsToAppear = Integer.parseInt((String)args[4]);
+			this.startStreetId = Integer.parseInt((String)args[1]);
+			this.endStreetId = Integer.parseInt((String)args[2]);
+			this.secondsToAppear = Integer.parseInt((String)args[3]);
+			
+			// Just for 1 intersection
+			this.currentStreetId = this.startStreetId;
+			this.nextStreetId = this.endStreetId;
+			
 			this.lane = 0;
 			this.secondsToCross = 0;
-			this.secondsToStop = INF;
+			this.distanceToNextStreet = INF;
 		}
 		
 		// System.out.println("AutAge" + this.automobileId + " created");
@@ -75,16 +81,22 @@ public class AutomobileAgent extends Agent{
 		
 		addBehaviour(new TickerBehaviour(this, TimeManager.getSeconds(1)) {
 			protected void onTick() {
+				
 				secondsToAppear--;
-				secondsToStop--;
 				if(secondsToAppear == 0){
-					//// System.out.println("AutAge" + automobileId + " enters the system");
 					myAgent.addBehaviour(new RequestLane());
-					state = AutomobileStateEnum.MOVING;
+					// state = AutomobileStateEnum.MOVING;
 				}
-				if(secondsToStop == 0){
-					state = AutomobileStateEnum.WAITING;
+				
+				if(state == AutomobileStateEnum.MOVING){
+					distanceToNextStreet -= mps;
+					if(distanceToNextStreet <= 0){
+						currentStreetId = nextStreetId;
+						// TODO: check for next street id
+						myAgent.addBehaviour(new RequestLane());
+					}
 				}
+				
 			}
 		});	
 	}
@@ -100,7 +112,7 @@ public class AutomobileAgent extends Agent{
 				// Validate change request
 				if(conversationId.equals("inform-cross")){
 					secondsToCross = secondsToAppear * (-1);
-					streetId = endStreetId;
+					currentStreetId = endStreetId;
 					System.out.println(automobileId + "\t" +secondsToCross); // DEBUG TEST
 				}
 			}
@@ -114,7 +126,7 @@ public class AutomobileAgent extends Agent{
 		public void action() {
 			switch(step){
 				case 0:
-					AID receiver = AIDManager.getStreetAID(streetId , myAgent);					
+					AID receiver = AIDManager.getStreetAID(currentStreetId , myAgent);					
 					if(receiver != null){
 						// Send the request to change priority
 						ACLMessage request = ACLMessageFactory.createRequestMsg(receiver, Integer.toString(automobileId) + "-" + Integer.toString(endStreetId), "request-lane");
@@ -134,7 +146,7 @@ public class AutomobileAgent extends Agent{
 							lane = Integer.parseInt(message[0]);
 							int distance = Integer.parseInt(message[1]);
 							int mps = Integer.parseInt(message[2]);
-							secondsToStop = distance / mps;
+							// secondsToStop = distance / mps;
 							step++;
 						}
 					}

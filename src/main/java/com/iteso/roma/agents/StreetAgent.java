@@ -119,9 +119,14 @@ public class StreetAgent extends Agent{
 						}
 						*/
 						int nextPriority = (lanesQueue.get(index).size() / ( maxLaneCapacity.get(index) / 5 )) + 1;
+						/*
+						System.out.println("StrAge" + streetId + " MAX:" + maxLaneCapacity.get(index));
+						System.out.println("StrAge" + streetId + " IN:" + lanesQueue.get(index).size());
+						System.out.println("StrAge" + streetId + " P:" + nextPriority);
+						*/
 						if(nextPriority > 5) nextPriority = 5;
 						
-						// if(stageId == 2) nextPriority = 5; // DEBUG
+						//if(stageId == 2) nextPriority = 5; // DEBUG
 						
 						/**
 						 * AL PONER ESTA LINEA GENERA QUE stgAge1 se salga del rango seguro stage 2 propone subir a stage 1 pero algo sale mal
@@ -153,7 +158,6 @@ public class StreetAgent extends Agent{
 						}
 											
 						if(receivers.size() > 0){
-							// Send the request to change priority
 							AID list[] = new AID[receivers.size()];
 							list = receivers.toArray(list);
 							ACLMessage request = ACLMessageFactory.createInformMsg(list, "", "inform-cross");

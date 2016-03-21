@@ -26,6 +26,8 @@ public class IntersectionAgent extends Agent{
 	private final int SECONDS_TO_REQUEST_NEXT_TIME = 4;
 	private final int DEFAULT_CYCLE_SECONDS = 16;
 	
+	private final boolean IS_STATIC = false;
+	
 	private int intersectionId;
 	private List<Integer> stagesIds;
 	private List<Integer> streetIds;
@@ -139,6 +141,7 @@ public class IntersectionAgent extends Agent{
 	}
 	
 	private class RequestChangePriority extends CyclicBehaviour{
+		@SuppressWarnings("unused")
 		public void action(){
 			MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 			ACLMessage msg = myAgent.receive(mt);
