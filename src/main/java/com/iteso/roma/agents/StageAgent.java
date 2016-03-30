@@ -83,9 +83,6 @@ public class StageAgent extends Agent{
 					reply.setPerformative(ACLMessage.INFORM);
 					reply.setContent(Integer.toString(cycleSeconds));
 					
-					// Print stage in progress DEBUG
-					System.out.println("stgAge" + stageId + "(" + priority + ") - " + cycleSeconds + " sec. P=" + priority);
-					
 					// cycleSeconds = DEFAULT_CYCLE_SECONDS;
 					myAgent.send(reply);
 				}

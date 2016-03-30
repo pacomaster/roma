@@ -147,8 +147,7 @@ public class StreetAgent extends Agent{
 					
 					// One of the stages for this street was activaded
 					
-					if(lane != -1){
-						
+					if(lane != -1){						
 						ArrayList<AID> receivers = new ArrayList<AID>();
 						int i = 0;			
 						while(lanesQueue.get(lane).size() > 0 && i < AutomobilesNextCycle){

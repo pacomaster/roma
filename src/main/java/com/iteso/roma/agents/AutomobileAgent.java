@@ -43,14 +43,13 @@ public class AutomobileAgent extends Agent{
 	private AutomobileStateEnum state = AutomobileStateEnum.STOP;	
 	
 	// ARGS
-	// (automobileId, startStreetId, endStreetId, secondsToAppear)
+	// (automobileId, startStreetId, endStreetId)
 	protected void setup(){
 		Object[] args =  getArguments();
 		if(args.length > 0){
-			this.automobileId = Integer.parseInt((String)args[0]);
-			this.startStreetId = Integer.parseInt((String)args[1]);
-			this.endStreetId = Integer.parseInt((String)args[2]);
-			this.secondsToAppear = Integer.parseInt((String)args[3]);
+			this.automobileId = (Integer)args[0];
+			this.startStreetId = (Integer)args[1];
+			this.endStreetId = (Integer)args[2];
 			
 			// Just for 1 intersection
 			this.currentStreetId = this.startStreetId;
@@ -77,17 +76,12 @@ public class AutomobileAgent extends Agent{
 			fe.printStackTrace();
 		}
 		
-		addBehaviour(new InformCross());
+		addBehaviour(new RequestLane());
+		
+		addBehaviour(new InformCross());		
 		
 		addBehaviour(new TickerBehaviour(this, TimeManager.getSeconds(1)) {
-			protected void onTick() {
-				
-				secondsToAppear--;
-				if(secondsToAppear == 0){
-					myAgent.addBehaviour(new RequestLane());
-					// state = AutomobileStateEnum.MOVING;
-				}
-				
+			protected void onTick() {				
 				if(state == AutomobileStateEnum.MOVING){
 					distanceToNextStreet -= mps;
 					if(distanceToNextStreet <= 0){

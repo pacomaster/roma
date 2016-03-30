@@ -112,6 +112,10 @@ public class IntersectionAgent extends Agent{
 						list = receivers.toArray(list);
 						ACLMessage request = ACLMessageFactory.createInformMsg(list, Integer.toString(lastId), "inform-stage");
 						myAgent.send(request);
+						
+						// Print stage in progress DEBUG
+						System.out.println("stgAge" + lastId + " - " + nextTime + " sec.");
+						
 						// System.out.println("IntAge" + intersectionId + " send-inform StrAge1");
 					}
 					

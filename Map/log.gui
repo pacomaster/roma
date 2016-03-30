@@ -1,0 +1,16 @@
+***Starting server on port 8820 ***
+Loading net-file from 'Map\map.net.xml'...  done (12ms).
+Loading additional-files from 'Map\map.vtypes.xml'...  done (0ms).
+Loading done.
+Simulation started with time: 0.00
+Error: send failed: Socket reset by peer
+Quitting (on error).
+Performance: 
+ Duration: 22054ms
+ Real time factor: 0.344609
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+
