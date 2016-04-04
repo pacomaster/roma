@@ -1,0 +1,14 @@
+***Starting server on port 8820 ***
+Loading net-file from 'romaSimulations\data\romaBasic.net.xml'...  done (3ms).
+Loading done.
+Simulation started with time: 54000.00
+Error: Answered with error to command 0xdb: Subscription has ended.
+Performance: 
+ Duration: 282232ms
+ Real time factor: 4.08883
+ UPS: 301.960798
+Vehicles: 
+ Inserted: 942 (Loaded: 1440)
+ Running: 77
+ Waiting: 498
+

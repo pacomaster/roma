@@ -1,1 +1,1 @@
-http://pacomaster:7778/acc
+http://FAMEZCUA-LAP.oradev.oraclecorp.com:7778/acc
