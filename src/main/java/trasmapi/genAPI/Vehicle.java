@@ -1,9 +1,16 @@
 package trasmapi.genAPI;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import trasmapi.genAPI.exceptions.UnimplementedMethod;
+import trasmapi.sumo.SumoCom;
+import trasmapi.sumo.protocol.Command;
+import trasmapi.sumo.protocol.Constants;
+import trasmapi.sumo.protocol.Content;
+import trasmapi.sumo.protocol.RequestMessage;
+import trasmapi.sumo.protocol.ResponseMessage;
 import trasmapi.sumo.vartypes.Position2D;
 
 public class Vehicle implements Comparable<Vehicle> {	
@@ -11,7 +18,7 @@ public class Vehicle implements Comparable<Vehicle> {
 	public static int classId = 0;
 	
 	public String id;
-	public boolean alive = false;
+	public boolean alive;
 	public double maxSpeed;
 	
 	public Route route;
@@ -64,7 +71,7 @@ public class Vehicle implements Comparable<Vehicle> {
 	/**
 	 * method used to check wheter a vehicle is inside the simulator
 	 * @return returns true if the vehicle is currently inside the simulation, false otherwise
-	 * @throws UnimplementedMethod
+	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
 	 */
 	public boolean inSimulation() throws UnimplementedMethod {
 		throw new UnimplementedMethod();

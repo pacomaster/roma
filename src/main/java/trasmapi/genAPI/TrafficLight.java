@@ -1,9 +1,17 @@
 package trasmapi.genAPI;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import trasmapi.genAPI.exceptions.UnimplementedMethod;
+import trasmapi.genAPI.exceptions.WrongCommand;
 import trasmapi.sumo.ControlledLinks;
+import trasmapi.sumo.SumoCom;
+import trasmapi.sumo.protocol.Command;
+import trasmapi.sumo.protocol.Constants;
+import trasmapi.sumo.protocol.Content;
+import trasmapi.sumo.protocol.RequestMessage;
+import trasmapi.sumo.protocol.ResponseMessage;
 
 public class TrafficLight {
 	
@@ -15,7 +23,7 @@ public class TrafficLight {
 
 	/**
 	 * @return ArrayList<String> - all Traffic Lights ids
-	 * @throws UnimplementedMethod
+	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
 	 */
 	public static ArrayList<String> getIdList() throws UnimplementedMethod{
 		throw new UnimplementedMethod();
@@ -26,7 +34,7 @@ public class TrafficLight {
 	 * method used to retrieve the state of a Traffic Light
 	 * state character representing the new state of the Traffic Light -> G - green  |  g - green (without priority) | r - red | y - yellow	
 	 * @return String with TL state
-	 * @throws UnimplementedMethod
+	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
 	 */
 	public String getState() throws UnimplementedMethod{
 		throw new UnimplementedMethod();
@@ -37,7 +45,7 @@ public class TrafficLight {
 	 * note that this is not the remaining duration, but the complete; 
 	 * use "getAssumedTimeOfNextSwitch" for obtaining the remaining duration
 	 * @return current phase duration
-	 * @throws UnimplementedMethod
+	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
 	 */
 	public int getCurrentPhaseDuration() throws UnimplementedMethod{
 		throw new UnimplementedMethod();
@@ -54,7 +62,7 @@ public class TrafficLight {
 	
 	/**
 	 * @return Returns the links controlled by the traffic light, sorted by the signal index and described by giving the incoming, outgoing, and via lane
-	 * @throws UnimplementedMethod
+	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
 	 */
 	public ControlledLinks getControlledLinks() throws UnimplementedMethod{
 		throw new UnimplementedMethod();
@@ -66,7 +74,7 @@ public class TrafficLight {
 	 * Sets the phase definition to the given. Assumes the given string is a tuple of light definitions from rRgGyYoO, 
 	 * for red, green, yellow, off, where lower case letters mean that the stream has to decelerate
 	 * @param string
-	 * @throws UnimplementedMethod
+	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
 	 */
 	public void setState(String string) throws UnimplementedMethod{
 		throw new UnimplementedMethod();

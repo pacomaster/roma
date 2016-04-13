@@ -29,7 +29,7 @@ public class Roma {
 		//Init JADE platform w/ or w/out GUI
 		if(JADE_GUI){
 			List<String> params = new ArrayList<String>();
-			params.add("-gui");	
+			params.add("-gui");
 			profile = new BootProfileImpl(params.toArray(new String[0]));
 		} else
 			profile = new ProfileImpl();
@@ -54,6 +54,8 @@ public class Roma {
 		Simulator sumo = new Sumo("guisim");
 		List<String> params = new ArrayList<String>();
 		params.add("-c=romaSimulations\\data\\romaBasic.sumo.cfg");
+		params.add("--device.emissions.probability=1.0");
+        params.add("--tripinfo-output=romaSimulations\\data\\trip.xml");
 		sumo.addParameters(params);
 		sumo.addConnections("localhost", 8820);
 

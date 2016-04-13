@@ -21,7 +21,7 @@ public class TraSMAPI {
 	/**
 	 * Initializes TraSMAPI for the given simulator
 	 * @param simulator - simulator identification tag
-	 * @throws IOException
+	 * @throws java.io.IOException
 	 */
 	public TraSMAPI(String simulator) {
 		if (simulator=="sumo" || simulator=="guisim") {
@@ -30,8 +30,8 @@ public class TraSMAPI {
 	}
 	/**
 	 * launches the Simulator Process
-	 * @throws IOException
-	 * @throws UnimplementedMethod 
+	 * @throws java.io.IOException
+	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
 	 */
 	public void launch() throws IOException, UnimplementedMethod {
 		sim.launch();
@@ -39,10 +39,10 @@ public class TraSMAPI {
 	
 	/**
 	 * method used to connect to the simulator (using sockets)
-	 * @throws UnknownHostException
-	 * @throws IOException
-	 * @throws TimeoutException
-	 * @throws UnimplementedMethod 
+	 * @throws java.net.UnknownHostException
+	 * @throws java.io.IOException
+	 * @throws trasmapi.genAPI.exceptions.TimeoutException
+	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
 	 */
 	public void connect() throws UnknownHostException, IOException, TimeoutException, UnimplementedMethod {
 		sim.connect();
@@ -50,8 +50,8 @@ public class TraSMAPI {
 	
 	/**
 	 * method used to close the simulator
-	 * @throws UnimplementedMethod 
-	 * @throws IOException 
+	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
+	 * @throws java.io.IOException
 	 */
 	public void close() throws UnimplementedMethod, IOException {
 		sim.close();
@@ -62,7 +62,7 @@ public class TraSMAPI {
 	/**
 	 * method used to advance k steps in the simulation
 	 * @param k - number of simulation steps to be simulated
-	 * @throws UnimplementedMethod 
+	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
 	 */
 	public boolean simulationStep(int k) throws UnimplementedMethod {
 		return sim.simulationStep(k);

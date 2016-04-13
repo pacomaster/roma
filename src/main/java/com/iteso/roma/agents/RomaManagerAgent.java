@@ -1,5 +1,6 @@
 package com.iteso.roma.agents;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,14 +10,22 @@ import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
+import trasmapi.genAPI.exceptions.UnimplementedMethod;
 import trasmapi.sumo.SumoCom;
+import trasmapi.sumo.SumoTrafficLight;
 import trasmapi.sumo.SumoVehicle;
 
 public class RomaManagerAgent extends Agent{
 	
+	private final int EXTRA_TIME = 64 * 1000;
+	
+	int nextCycle = 31;
+	
 	private ContainerController mainContainer;
 	private int romaManagerId;
 	private Map<String, VehicleAgent> vehicleAgents =  new HashMap<String, VehicleAgent>(); 
+	
+	private ArrayList<SumoTrafficLight> trafficLightsList = new ArrayList<SumoTrafficLight>();
 	
 	private int val = 0;
 	private int inc = 1;
@@ -24,55 +33,53 @@ public class RomaManagerAgent extends Agent{
 	
 	public RomaManagerAgent(int romaManagerId, ContainerController mainContainer) {
 		this.romaManagerId = romaManagerId;
-		this.mainContainer = mainContainer;		
-	}
-	
-	public void createAgents(){
+		this.mainContainer = mainContainer;
 		
+		
+	}
+
+	public void createAgents() throws UnimplementedMethod{
+		ArrayList<String> tlsIds = SumoTrafficLight.getIdList();
+		System.out.println("TRAFFIC LIGHTS:");
+        for (String tlId : tlsIds) {
+            System.out.println(tlId);
+            trafficLightsList.add(new SumoTrafficLight(tlId));
+        }
+        
 	}
 	
 	protected void setup() {
 		
-		// Behavior to wait for the generation of automobiles to start and then generate them
-		addBehaviour(new TickerBehaviour(this, TimeManager.getSeconds(64)) {
-			protected void onTick() {								
-
-				val += inc;
-				if(val > 32){
-					inc = -1;
-					val -= 2;
-				}
-				if(val == 0){
-					inc = 1;
-					val += 2;
-				}
+		AutomobileGeneratorAgent automobileGeneratorAgent1 = new AutomobileGeneratorAgent(1,"route01", true, this.mainContainer);
+		AutomobileGeneratorAgent automobileGeneratorAgent3 = new AutomobileGeneratorAgent(3,"route03", true, this.mainContainer);
+		AutomobileGeneratorAgent automobileGeneratorAgent5 = new AutomobileGeneratorAgent(5,"route05", false, this.mainContainer);
+		AutomobileGeneratorAgent automobileGeneratorAgent7 = new AutomobileGeneratorAgent(7,"route07", false, this.mainContainer);
+		try {
+			mainContainer.acceptNewAgent("autoGenAge1", automobileGeneratorAgent1).start();
+			mainContainer.acceptNewAgent("autoGenAge3", automobileGeneratorAgent3).start();
+			mainContainer.acceptNewAgent("autoGenAge5", automobileGeneratorAgent5).start();
+			mainContainer.acceptNewAgent("autoGenAge7", automobileGeneratorAgent7).start();
+		} catch (StaleProxyException e) {
+			e.printStackTrace();
+		}
+		
+		addBehaviour(new TickerBehaviour(this, TimeManager.getSeconds(1)) {
+			protected void onTick() {
+				int sumoTimeFull = SumoCom.getCurrentSimStep();
+				int sumoTime = sumoTimeFull / 1000;
 				
-				int automobilesToCreate = val * 1;
-				//System.out.println("NUM: " + automobilesToCreate);
-				
-				for(int i = 0; i < automobilesToCreate; i++){
-					
-					int id = automobileCounter;
-					byte b = 0;
-					
-					SumoVehicle sumoVehicle = new SumoVehicle(id, "CarA", "route01", SumoCom.getCurrentSimStep(), 0, b);
-					SumoCom.addVehicleToSimulation(sumoVehicle);
-					
-					SumoCom.
-					
-					String str = "veh" + id;											
-					VehicleAgent vehicleAgent = new VehicleAgent(str);
-					try {
-						mainContainer.acceptNewAgent(str, vehicleAgent).start();
-					} catch (StaleProxyException e) {
-						e.printStackTrace();
+				if(sumoTime > nextCycle){
+					for(SumoTrafficLight tl: trafficLightsList){
+						tl.changePhase();
+						nextCycle += tl.pTime[tl.getPhaseId()];
+						System.out.println(sumoTime + " PHASE: " + tl.getPhaseId() + " nextCycle: " + nextCycle);						
 					}
-					
-					//System.out.println("Create AutAge" + id);
-					automobileCounter++;
-				}
+				}			
+				
 			}
-		});	
+		});
 		
 	}
+	
+	
 }

@@ -11,7 +11,7 @@ public class VehicleAgent extends Agent{
 	}
 	
 	protected void setup(){
-		System.out.println("Create: " + vehicleId);
+		// System.out.println("Create: " + vehicleId);
 	}
 
 }
