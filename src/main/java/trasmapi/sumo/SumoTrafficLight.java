@@ -14,9 +14,6 @@ import trasmapi.genAPI.exceptions.WrongCommand;
 import trasmapi.sumo.protocol.*;
 
 public class SumoTrafficLight extends TrafficLight {
-
-	private int p = 0;
-	public int[] pTime = {31,4,6,4,31,4,6,4};
 	
 	String state;
 	private ArrayList<String> controlledLanes;
@@ -201,45 +198,6 @@ public class SumoTrafficLight extends TrafficLight {
 		}
 
 		return null;
-	}
-	
-	public int getPhaseId() {
-		return p;
-	}
-
-	public void setPhaseId(int p) {
-		this.p = p;
-	}
-	
-	public void changePhase(){
-		p++;
-		if(p > 7) p = 0;
-		switch(p){
-			case 0:
-				setState("rrrGGGgrrrGGGg");
-				break;
-			case 1:
-				setState("rrryyygrrryyyg");
-				break;
-			case 2:
-				setState("rrrrrrGrrrrrrG");
-				break;
-			case 3:
-				setState("rrrrrryrrrrrry");
-				break;
-			case 4:
-				setState("GGgrrrrGGgrrrr");
-				break;
-			case 5:
-				setState("yygrrrryygrrrr");
-				break;
-			case 6:
-				setState("rrGrrrrrrGrrrr");
-				break;
-			case 7:
-				setState("rryrrrrrryrrrr");
-				break;
-		}		
-	}
+	}	
 
 }

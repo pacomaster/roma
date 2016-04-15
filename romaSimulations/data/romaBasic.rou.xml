@@ -10,17 +10,17 @@
 	<vType accel="2.6" decel="4.5" id="CarC" length="5.0" minGap="2.5" maxSpeed="40.0" sigma="0.5" />
 	<vType accel="2.6" decel="4.5" id="CarD" length="4.5" minGap="2.5" maxSpeed="40.0" sigma="0.5" />
 	
-	<route id="route01" edges="E1 E6"/>
-	<route id="route02" edges="E1 E4"/>
-	<route id="route03" edges="E3 E8"/>
-	<route id="route04" edges="E3 E6"/>
-	<route id="route05" edges="E5 E2"/>
-	<route id="route06" edges="E5 E8"/>
-	<route id="route07" edges="E7 E4"/>
-	<route id="route08" edges="E7 E2"/>
-	<route id="route09" edges="E1 E8"/>
-	<route id="route10" edges="E3 E2"/>
-	<route id="route11" edges="E5 E4"/>
-	<route id="route12" edges="E7 E6"/>
+	<route id="rou1" edges="E1 E6"/>
+	<route id="rou2" edges="E1 E4"/>
+	<route id="rou3" edges="E3 E8"/>
+	<route id="rou4" edges="E3 E6"/>
+	<route id="rou5" edges="E5 E2"/>
+	<route id="rou6" edges="E5 E8"/>
+	<route id="rou7" edges="E7 E4"/>
+	<route id="rou8" edges="E7 E2"/>
+	<route id="rou9" edges="E1 E8"/>
+	<route id="rou10" edges="E3 E2"/>
+	<route id="rou11" edges="E5 E4"/>
+	<route id="rou12" edges="E7 E6"/>
 	
 </routes>

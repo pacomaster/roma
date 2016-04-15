@@ -16,31 +16,30 @@ import trasmapi.sumo.SumoVehicle;
  * 
  */
 @SuppressWarnings("serial")
-public class AutomobileGeneratorAgent extends Agent{
+public class RouteAgent extends Agent{
 	
 	private final int EXTRA_TIME = 64 * 1000;
 	private final int ID = 1000000;
 	
 	private int nextCycle = 64;
 	
-	private int automobileGeneratorId;
 	private String routeId;
+	private int rId;
 	private boolean signal;
 	
 	private int val = 0;
 	private int automobileCounter;
 	private ContainerController mainContainer;
 	
-	public AutomobileGeneratorAgent(int automobileGeneratorId, String routeId, boolean signal, ContainerController mainContainer) {
-		this.automobileGeneratorId = automobileGeneratorId;
+	public RouteAgent(String routeId, boolean signal, ContainerController mainContainer) {
 		this.routeId = routeId;
+		this.rId = Integer.parseInt(routeId.substring(3));
 		this.signal = signal;
-		this.automobileCounter= ID * automobileGeneratorId;
+		this.automobileCounter= ID * rId;
 		this.mainContainer = mainContainer;
 	}
 	
-	// ARGS
-	// (automobileGeneratorId, streetId,  timeToStart)
+	
 	protected void setup(){		
 		addBehaviour(new TickerBehaviour(this, TimeManager.getSeconds(1)) {
 			protected void onTick() {
@@ -54,7 +53,7 @@ public class AutomobileGeneratorAgent extends Agent{
 					
 					long automobilesToCreate = Math.round(triangularFunction(val, 64, 1, 32, signal)) * 1;
 					val++;
-					System.out.println(sumoTime + " - GEN_" + routeId + ": " + automobilesToCreate);
+					// System.out.println(sumoTime + " - GEN_" + routeId + ": " + automobilesToCreate);
 					
 					for(int i = 0; i < automobilesToCreate; i++){
 						
