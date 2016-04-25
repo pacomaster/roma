@@ -64,20 +64,34 @@ public class RomaManagerAgent extends Agent{
 			e.printStackTrace();
 		}
 		
-		// Traffic Light Agents		
-		int[] pTimes = {4,31,6,4,31,4,6,4};		
-		String[] pValues = {
-				"GGGgrrrrGGGgrrrr",
-				"yyygrrrryyygrrrr",
-				"rrrGrrrrrrrGrrrr",
-				"rrryrrrrrrryrrrr",
-				"rrrrGGGgrrrrGGGg",
-				"rrrryyygrrrryyyg",
-				"rrrrrrrGrrrrrrrG",
-				"rrrrrrryrrrrrrry"};
+		int[] pTimes1 = {31,4};
+		String[] pValues1 = {"GGGrrrrrGGGrrrrr", "yyyrrrrryyyrrrrr"};	
+		PhaseAgent phaseAgent1 = new PhaseAgent("pha1","jun5",pTimes1,pValues1);
 		
-		JunctionAgent junctonAgent5 = new JunctionAgent("J5", pTimes, pValues, mainContainer);
+		int[] pTimes2 = {6,4};
+		String[] pValues2 = {"rrrGrrrrrrrGrrrr", "rrryrrrrrrryrrrr"};	
+		PhaseAgent phaseAgent2 = new PhaseAgent("pha2","jun5",pTimes2,pValues2);
+		
+		int[] pTimes3 = {31,4};
+		String[] pValues3 = {"rrrrGGGrrrrrGGGr", "rrrryyyrrrrryyyr"};	
+		PhaseAgent phaseAgent3 = new PhaseAgent("pha3","jun5",pTimes3,pValues3);
+		
+		int[] pTimes4 = {6,4};
+		String[] pValues4 = {"rrrrrrrGrrrrrrrG", "rrrrrrryrrrrrrry"};	
+		PhaseAgent phaseAgent4 = new PhaseAgent("pha4","jun5",pTimes4,pValues4);
+		
+		ArrayList<PhaseAgent> phasesList = new ArrayList<PhaseAgent>();
+		phasesList.add(phaseAgent1);
+		phasesList.add(phaseAgent2);
+		phasesList.add(phaseAgent3);
+		phasesList.add(phaseAgent4);
+		
+		JunctionAgent junctonAgent5 = new JunctionAgent("J5", pTimes1, pValues1, phasesList, mainContainer);
 		try {
+			mainContainer.acceptNewAgent("pha1", phaseAgent1).start();
+			mainContainer.acceptNewAgent("pha2", phaseAgent2).start();
+			mainContainer.acceptNewAgent("pha3", phaseAgent3).start();
+			mainContainer.acceptNewAgent("pha4", phaseAgent4).start();
 			mainContainer.acceptNewAgent("jun5", junctonAgent5).start();
 		} catch (StaleProxyException e) {
 			e.printStackTrace();

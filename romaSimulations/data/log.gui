@@ -1,44 +1,13 @@
 ***Starting server on port 8820 ***
-Loading net-file from 'romaSimulations\data\romaBasic.net.xml'...  done (4ms).
+Loading net-file from 'romaSimulations\data\romaBasic.net.xml'...  done (2ms).
 Loading done.
 Simulation started with time: 0.00
-Warning: Departure time for vehicle '5000141' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000142' is in the past; using current time instead.
-Warning: Departure time for vehicle '5000142' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000143' is in the past; using current time instead.
-Warning: Departure time for vehicle '5000143' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000144' is in the past; using current time instead.
-Warning: Departure time for vehicle '5000144' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000145' is in the past; using current time instead.
-Warning: Departure time for vehicle '5000145' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000146' is in the past; using current time instead.
-Warning: Departure time for vehicle '5000146' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000147' is in the past; using current time instead.
-Warning: Departure time for vehicle '5000147' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000148' is in the past; using current time instead.
-Warning: Departure time for vehicle '5000148' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000149' is in the past; using current time instead.
-Warning: Departure time for vehicle '5000149' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000170' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000171' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000172' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000173' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000174' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000175' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000176' is in the past; using current time instead.
-Warning: Departure time for vehicle '5000225' is in the past; using current time instead.
-Warning: Departure time for vehicle '5000226' is in the past; using current time instead.
-Warning: Departure time for vehicle '5000227' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000248' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000249' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000250' is in the past; using current time instead.
-Warning: Departure time for vehicle '7000251' is in the past; using current time instead.
 Performance: 
- Duration: 75798ms
- Real time factor: 9.78918
- UPS: 793.701681
+ Duration: 42521ms
+ Real time factor: 9.66581
+ UPS: 297.523577
 Vehicles: 
- Inserted: 369 (Loaded: 672)
- Running: 141
- Waiting: 268
+ Inserted: 215 (Loaded: 396)
+ Running: 55
+ Waiting: 115
 

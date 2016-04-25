@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 14/04/2016 12:55:25 p.m. by Netedit Version 0.25.0
+<!-- generated on 4/24/2016 9:47:34 PM by Netedit Version 0.25.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netedit.exeConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="C:\Users\famezcua\git\roma\romaSimulations\data\romaBasic.net.xml"/>
+        <sumo-net-file value="C:\Users\Francisco\git\roma\romaSimulations\data\romaBasic.net.xml"/>
     </input>
 
     <output>
-        <output-file value="C:\Users\famezcua\git\roma\romaSimulations\data\romaBasic.net.xml"/>
+        <output-file value="C:\Users\Francisco\git\roma\romaSimulations\data\romaBasic.net.xml"/>
     </output>
 
     <processing>

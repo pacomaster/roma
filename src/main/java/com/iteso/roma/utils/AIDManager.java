@@ -25,6 +25,23 @@ public class AIDManager {
 		return receiver;
 	}
 	
+	public static  AID getPhaseAID(String phaseId, Agent theAgent){
+		// Search phase service receiver
+		DFAgentDescription template = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType(phaseId);
+		template.addServices(sd);
+		AID receiver =  null;
+		try {
+			DFAgentDescription[] result = DFService.search(theAgent, template); 
+			if(result.length > 0) receiver = result[0].getName();
+		}
+		catch (FIPAException fe) {
+			fe.printStackTrace();
+		}
+		return receiver;
+	}
+	
 	public static AID getIntersectionAID(int intersectionId, Agent theAgent){
 		// Search stage service receiver
 		DFAgentDescription template = new DFAgentDescription();
