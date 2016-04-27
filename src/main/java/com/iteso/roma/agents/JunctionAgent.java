@@ -1,6 +1,7 @@
 package com.iteso.roma.agents;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.iteso.roma.utils.ACLMessageFactory;
 import com.iteso.roma.utils.AIDManager;
@@ -9,6 +10,7 @@ import com.iteso.roma.utils.TimeManager;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -62,17 +64,21 @@ public class JunctionAgent extends Agent{
 			fe.printStackTrace();
 		}
 		
+		
+		
 		addBehaviour(new TickerBehaviour(this, TimeManager.getSeconds(1)) {
 			protected void onTick() {
 				int sumoTimeFull = SumoCom.getCurrentSimStep();
 				int sumoTime = sumoTimeFull / 1000;
 				
-				if(sumoTime > nextCycle){
+				if(sumoTime > nextCycle){					
 					changePhase(myAgent);					
 					System.out.println(sumoTime + " " + junctionId + " P: " + phaseStep + " nextCycle: " + nextCycle);						
 				}
 			}
 		});
+		
+		addBehaviour(new RequestMessage());
 	}
 	
 	public void changePhase(Agent myAgent){
@@ -136,6 +142,103 @@ public class JunctionAgent extends Agent{
 		public boolean done(){
 			return step == 2;
 		}
-	}	
+	}
+	
+	private class RequestMessage extends CyclicBehaviour{
+		public void action(){
+			MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
+			ACLMessage msg = myAgent.receive(mt);
+			if (msg != null) {
+
+				String conversationId = msg.getConversationId();
+				
+				// Request change of priority from laneAgent
+				
+				if(conversationId.equals("lane-change-priority")){
+					
+					// Get stageId and priority to change
+					
+					String content = msg.getContent();
+					String laneId = content.split(",")[0];
+					int priority = Integer.parseInt(content.split(",")[1]);
+					
+					// Create list of stageAgents that are on top of the stage with priority change 
+					
+					ArrayList<String> laneNames = myself.getControlledLanes();
+					String lanesAffected = "";
+					int i = 0;
+					boolean first = true;
+					for(String laneName :laneNames){
+						if(laneName.equals(laneId)){
+							if(first){
+								first = false;
+								lanesAffected += i;
+							}else{
+								lanesAffected += "," + i;
+							}							
+						}
+					}
+					
+					i = 0;
+					String phasesOrder = phasesList.get(0).getPhaseId();
+					for(i = 1; i < phasesList.size(); i++){
+						phasesOrder += "," + phasesList.get(i).getPhaseId();
+					}
+					
+					for(PhaseAgent phase:phasesList){
+						ACLMessage request = ACLMessageFactory.createRequestMsg(
+								AIDManager.getPhaseAID(phase.getPhaseId(), myAgent), 
+								priority + "#" + lanesAffected + "#" + phasesOrder,
+								"lane-change-priority");
+						myAgent.send(request);
+					}
+					
+					
+				}
+				/*
+				if(conversationId.equals("stage-up")){
+					String content = msg.getContent();
+					int stageId = Integer.parseInt(content);
+					int index = stagesIds.indexOf(stageId);
+					
+					// DEBUG
+//					System.out.println("OLD QUEUE - " + stageId);
+//					for(int i : stagesIds){
+//						System.out.println(i);
+//					}
+					// DEBUG
+					
+					if(index > 1){						
+						ACLMessage reply = msg.createReply();
+						reply.setPerformative(ACLMessage.AGREE);
+						reply.setContent("");
+						myAgent.send(reply);
+						
+						stagesIds.remove(index);
+						stagesIds.add(index - 1, stageId);
+						
+						reply = msg.createReply();
+						reply.setPerformative(ACLMessage.INFORM);
+						reply.setContent("");
+						myAgent.send(reply);
+					}else{
+						ACLMessage reply = msg.createReply();
+						reply.setPerformative(ACLMessage.REFUSE);
+						reply.setContent("");
+						myAgent.send(reply);
+					}
+					
+					// DEBUG
+//					System.out.println("NEW QUEUE");
+//					for(int i : stagesIds){
+//						System.out.println(i);
+//					}
+					// DEBUG
+				}
+				*/
+			}
+			block();
+		}
+	}
 
 }
