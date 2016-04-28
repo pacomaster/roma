@@ -199,13 +199,24 @@ public class JunctionAgent extends Agent{
 				if(conversationId.equals("stage-up")){
 					String content = msg.getContent();
 					int stageId = Integer.parseInt(content);
-					int index = stagesIds.indexOf(stageId);
+					
+					int index = 0;
+					int i = 0;
+					PhaseAgent auxPhaseAgent = null;
+					for(PhaseAgent phase:phasesList){
+						if(phase.getPhaseId().equals(stageId)){
+							auxPhaseAgent = phase;
+							index = i;
+							break;
+						}
+						i++;
+					}
 					
 					// DEBUG
-//					System.out.println("OLD QUEUE - " + stageId);
-//					for(int i : stagesIds){
-//						System.out.println(i);
-//					}
+					System.out.println("OLD QUEUE - " + stageId);
+					for(PhaseAgent phase:phasesList){
+						System.out.println(phase.getPhaseId());
+					}
 					// DEBUG
 					
 					if(index > 1){						
@@ -214,8 +225,8 @@ public class JunctionAgent extends Agent{
 						reply.setContent("");
 						myAgent.send(reply);
 						
-						stagesIds.remove(index);
-						stagesIds.add(index - 1, stageId);
+						phasesList.remove(index);
+						phasesList.add(index - 1, auxPhaseAgent);
 						
 						reply = msg.createReply();
 						reply.setPerformative(ACLMessage.INFORM);
@@ -229,10 +240,10 @@ public class JunctionAgent extends Agent{
 					}
 					
 					// DEBUG
-//					System.out.println("NEW QUEUE");
-//					for(int i : stagesIds){
-//						System.out.println(i);
-//					}
+					System.out.println("NEW QUEUE");
+					for(PhaseAgent phase:phasesList){
+						System.out.println(phase.getPhaseId());
+					}
 					// DEBUG
 				}
 				*/
