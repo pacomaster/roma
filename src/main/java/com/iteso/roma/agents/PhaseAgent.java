@@ -30,6 +30,8 @@ public class PhaseAgent extends Agent{
 	private int lanesGreen;
 	private int[] lanesPriorities;
 	
+	private boolean isNegotiating = false;
+	
 	public PhaseAgent(String phaseId, String junctionId, int[] phaseTimes, String[] phaseValues) {
 		this.phaseId = phaseId;
 		this.junctionId = junctionId;
@@ -221,34 +223,55 @@ public class PhaseAgent extends Agent{
 		private boolean[] agentsAccepted;
 		private int offerTime = -1;
 		private final int END_STEP = 5;
+		private boolean isGreen = false;
 		
 		public Coordination(String msg){
 			super();
-			phasePriority = Integer.parseInt(msg.split("#")[0]);
-			String lanesAffectedString = msg.split("#")[1];
-			String phasesListString = msg.split("#")[2];
-			
-			// TODO: Use lanes affected to modify lanesPriorities
-			
-			String[] phasesIds = phasesListString.split(",");
-			
-			String agentsAbove ="";
-			boolean first = true;
-			for(String phase: phasesIds){
-				if(phaseId != phase){
-					if(first){
-						first = false;
-						agentsAbove += phase;
-					}else{
-						agentsAbove += "," + phase;
+			if(!isNegotiating){				
+				phasePriority = Integer.parseInt(msg.split("#")[0]);
+				String lanesAffectedString = msg.split("#")[1];
+				String phasesListString = msg.split("#")[2];
+				
+				// TODO: Use lanes affected to modify lanesPriorities
+				
+				String[] lanesAffected = lanesAffectedString.split(",");
+				String[] phasesIds = phasesListString.split(",");		
+				
+				agentsAbove ="";
+				boolean first = true;
+				isGreen = false;
+				
+				for(int i = 0; i < lanesAffected.length; i++){
+					int intAffected = Integer.parseInt(lanesAffected[i]);
+					char charAffected = phaseValues[0].charAt(i);
+					if(intAffected == 1 && charAffected == 'G'){
+						isGreen = true;
+						break;
 					}
-				}else{
-					break;
 				}
+				
+				if(phasesIds[0].equals(phaseId) || phasesIds[1].equals(phaseId)){
+					isGreen = false;
+				}else{			
+					for(int i = 1; i < phasesIds.length; i++){
+						String phase = phasesIds[i];				
+						if(!phaseId.equals(phase)){
+							if(first){
+								first = false;
+								agentsAbove += phase;
+							}else{
+								agentsAbove += "," + phase;
+							}					
+						}else{
+							break;
+						}
+					}
+					this.agents = agentsAbove.split(",");
+					this.agentsAccepted = new boolean[agents.length];
+				}			
+			}else{
+				isGreen = false;
 			}
-			
-			this.agents = agentsAbove.split(",");
-			this.agentsAccepted = new boolean[agents.length];
 		}
 		
 		/**
@@ -286,23 +309,30 @@ public class PhaseAgent extends Agent{
 				case 0:
 					// STEP 0: Calculate offer and send that to next stage in the top
 					
-					if(offerTime == -1) offerTime = getOffer(); // Get offer time value only first time
-					if(offerTime > 0){
-						
-						// Send CFP to next stageId in the top of the list
-						
-						ACLMessage request = ACLMessageFactory.createCFPMsg(AIDManager.getStageAID(Integer.parseInt(agents[currentAgent]), myAgent), "1", "stage-coordination");
-						myAgent.send(request);
-						step++;
-						
-						// System.out.println("stgAge" + stageId + " offerTime: " + offerTime);
-						// System.out.println("stgAge" + stageId + " offers 1s to  " + agents[currentAgent]);
-						
-					}else{
-						
-						// If the stage cannot offer any time the coordination is cancelled.
-						
+					if(!isGreen){
 						step = END_STEP;
+					}else{
+						isNegotiating = true;
+						// System.out.println("PHASE AFFECTED: " + phaseId + " UP PHASES: " + agentsAbove);
+						
+						if(offerTime == -1) offerTime = getOffer(); // Get offer time value only first time
+						if(offerTime > 0){
+							
+							// Send CFP to next stageId in the top of the list
+							
+							ACLMessage request = ACLMessageFactory.createCFPMsg(AIDManager.getPhaseAID(agents[currentAgent], myAgent), "1", "stage-coordination");
+							myAgent.send(request);
+							step++;
+							
+							// System.out.println("stgAge" + stageId + " offerTime: " + offerTime);
+							// System.out.println("stgAge" + stageId + " offers 1s to  " + agents[currentAgent]);
+							
+						}else{
+							
+							// If the stage cannot offer any time the coordination is cancelled.
+							isNegotiating = false;
+							step = END_STEP;
+						}
 					}
 					break;
 				case 1:
@@ -316,7 +346,7 @@ public class PhaseAgent extends Agent{
 						// System.out.println("stgAge" + stageId + " receives refuse"); // DEBUG
 						
 						// If offer was refuse then coordination is over.
-						
+						isNegotiating = false;
 						step = END_STEP;
 					}else{
 						MessageTemplate mtp = MessageTemplate.MatchPerformative(ACLMessage.PROPOSE);
@@ -341,12 +371,13 @@ public class PhaseAgent extends Agent{
 									if(offerTime - timeProposal >= 0){
 										timeToSend = timeProposal;
 										offerTime -= timeProposal;
-										message = ACLMessageFactory.createAcceptProposalMsg(AIDManager.getStageAID(Integer.parseInt(agents[currentAgent]), myAgent), Integer.toString(timeToSend), "stage-accept");
+										message = ACLMessageFactory.createAcceptProposalMsg(AIDManager.getPhaseAID(agents[currentAgent], myAgent), Integer.toString(timeToSend), "stage-accept");
 										step++;
 										myAgent.send(message);
 										// System.out.println("stgAge" + stageId + " accepts offers " + timeToSend + "s to stage"); // DEBUG
 									}else{
-										message = ACLMessageFactory.createRejectProposalMsg(AIDManager.getStageAID(Integer.parseInt(agents[currentAgent]), myAgent), "", "stage-reject");
+										message = ACLMessageFactory.createRejectProposalMsg(AIDManager.getPhaseAID(agents[currentAgent], myAgent), "", "stage-reject");
+										isNegotiating = false;
 										step = END_STEP;
 										myAgent.send(message);
 										
@@ -406,6 +437,7 @@ public class PhaseAgent extends Agent{
 						
 						if(conversationId.equals("stage-up")){
 							// System.out.println("stgAge" + stageId + " received refuse from intAge" + intersectionId); // DEBUG
+							isNegotiating = false;
 							step = END_STEP;
 						}
 					}
@@ -427,6 +459,7 @@ public class PhaseAgent extends Agent{
 								currentAgent++;
 								step = 0;
 							}else{
+								isNegotiating = false;
 								step = END_STEP;
 							}
 						}
@@ -442,6 +475,7 @@ public class PhaseAgent extends Agent{
 						
 						if(conversationId.equals("stage-up")){
 							// System.out.println("stgAge" + stageId + " received failure from intAge" + intersectionId); // DEBUG
+							isNegotiating = false;
 							step = END_STEP;
 						}
 					}

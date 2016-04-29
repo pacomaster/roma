@@ -23,7 +23,7 @@ public class LaneAgent extends Agent{
 	
 	int currentPriority = 1;
 	
-	private int nextCycle = 10;
+	private int nextCycle = 60;
 	
 	public LaneAgent(String laneId, String junctionId) {
 		this.laneId = laneId;
@@ -53,13 +53,13 @@ public class LaneAgent extends Agent{
 				int sumoTime = sumoTimeFull / 1000;
 				
 				if(sumoTime > nextCycle){
-					nextCycle += 10;
+					nextCycle += 60;
 					
 					int numVeh = myself.getNumVehicles();
 					double laneLength = myself.getLength();
 					double avgVehLength = 6.0;
 					
-					int priority = (int) (((avgVehLength * numVeh) / laneLength) * 5.0);
+					int priority = (int) (((avgVehLength * numVeh) / laneLength) * 5.0) + 1;
 					if(currentPriority != priority){
 						currentPriority = priority;
 						if(currentPriority > 2){
@@ -69,6 +69,8 @@ public class LaneAgent extends Agent{
 									laneId + "," + currentPriority,
 									"lane-change-priority");
 							myAgent.send(request);
+							
+							System.out.println("LANE: " + laneId + " PRIORITY: " + currentPriority);
 						}
 					}
 					

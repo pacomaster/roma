@@ -73,7 +73,7 @@ public class JunctionAgent extends Agent{
 				
 				if(sumoTime > nextCycle){					
 					changePhase(myAgent);					
-					System.out.println(sumoTime + " " + junctionId + " P: " + phaseStep + " nextCycle: " + nextCycle);						
+					System.out.println(sumoTime + " " + junctionId + " P: " + phaseStep + " nextCycle: " + phaseTimes[phaseStep]);
 				}
 			}
 		});
@@ -166,22 +166,27 @@ public class JunctionAgent extends Agent{
 					
 					ArrayList<String> laneNames = myself.getControlledLanes();
 					String lanesAffected = "";
-					int i = 0;
 					boolean first = true;
 					for(String laneName :laneNames){
 						if(laneName.equals(laneId)){
 							if(first){
 								first = false;
-								lanesAffected += i;
+								lanesAffected += 1;
 							}else{
-								lanesAffected += "," + i;
+								lanesAffected += "," + 1;
 							}							
+						}else{
+							if(first){
+								first = false;
+								lanesAffected += 0;
+							}else{
+								lanesAffected += "," + 0;
+							}	
 						}
 					}
 					
-					i = 0;
 					String phasesOrder = phasesList.get(0).getPhaseId();
-					for(i = 1; i < phasesList.size(); i++){
+					for(int i = 1; i < phasesList.size(); i++){
 						phasesOrder += "," + phasesList.get(i).getPhaseId();
 					}
 					
@@ -195,10 +200,10 @@ public class JunctionAgent extends Agent{
 					
 					
 				}
-				/*
+				
 				if(conversationId.equals("stage-up")){
 					String content = msg.getContent();
-					int stageId = Integer.parseInt(content);
+					String stageId = content;
 					
 					int index = 0;
 					int i = 0;
@@ -213,10 +218,11 @@ public class JunctionAgent extends Agent{
 					}
 					
 					// DEBUG
-					System.out.println("OLD QUEUE - " + stageId);
+					System.out.print("OLD QUEUE - " + stageId + ":");
 					for(PhaseAgent phase:phasesList){
-						System.out.println(phase.getPhaseId());
+						System.out.print(phase.getPhaseId() + " ");
 					}
+					System.out.println();
 					// DEBUG
 					
 					if(index > 1){						
@@ -240,13 +246,14 @@ public class JunctionAgent extends Agent{
 					}
 					
 					// DEBUG
-					System.out.println("NEW QUEUE");
+					System.out.print("NEW QUEUE - " + stageId + ":");
 					for(PhaseAgent phase:phasesList){
-						System.out.println(phase.getPhaseId());
+						System.out.print(phase.getPhaseId() + " ");
 					}
+					System.out.println();
 					// DEBUG
 				}
-				*/
+				
 			}
 			block();
 		}
