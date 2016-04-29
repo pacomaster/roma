@@ -13,7 +13,6 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import trasmapi.sumo.SumoCom;
 import trasmapi.sumo.SumoLane;
-import trasmapi.sumo.SumoTrafficLight;
 
 public class LaneAgent extends Agent{
 	

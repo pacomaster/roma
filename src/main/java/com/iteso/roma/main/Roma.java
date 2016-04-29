@@ -11,7 +11,6 @@ import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-import start.ODManager;
 import trasmapi.genAPI.Simulator;
 import trasmapi.genAPI.TraSMAPI;
 import trasmapi.genAPI.exceptions.TimeoutException;
@@ -70,9 +69,6 @@ public class Roma {
 		api.start();
 		
 		Thread.sleep(1000);
-		
-		//instatiate agents
-		romaManager.createAgents();
 
 		while(true)
 			if(!api.simulationStep(0))

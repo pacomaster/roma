@@ -4,7 +4,6 @@ import com.iteso.roma.utils.TimeManager;
 
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
-import jade.wrapper.StaleProxyException;
 import trasmapi.sumo.SumoCom;
 import trasmapi.sumo.SumoVehicle;
 

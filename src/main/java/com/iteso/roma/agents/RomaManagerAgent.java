@@ -1,8 +1,6 @@
 package com.iteso.roma.agents;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.iteso.roma.utils.TimeManager;
 
@@ -10,42 +8,18 @@ import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-import trasmapi.genAPI.exceptions.UnimplementedMethod;
 import trasmapi.sumo.SumoCom;
-import trasmapi.sumo.SumoTrafficLight;
-import trasmapi.sumo.SumoVehicle;
 
 public class RomaManagerAgent extends Agent{
-	
-	private final int EXTRA_TIME = 64 * 1000;
 	
 	int nextCycle = 31;
 	
 	private ContainerController mainContainer;
 	private int romaManagerId;
-	private Map<String, VehicleAgent> vehicleAgents =  new HashMap<String, VehicleAgent>(); 
-	
-	private ArrayList<SumoTrafficLight> trafficLightsList = new ArrayList<SumoTrafficLight>();
-	
-	private int val = 0;
-	private int inc = 1;
-	private int automobileCounter=1;
 	
 	public RomaManagerAgent(int romaManagerId, ContainerController mainContainer) {
 		this.romaManagerId = romaManagerId;
 		this.mainContainer = mainContainer;
-	}
-
-	public void createAgents() throws UnimplementedMethod{
-		/*
-		ArrayList<String> tlsIds = SumoTrafficLight.getIdList();
-		System.out.println("TRAFFIC LIGHTS:");
-        for (String tlId : tlsIds) {
-            System.out.println(tlId);
-            trafficLightsList.add(new SumoTrafficLight(tlId));
-        }
-        */
-        
 	}
 	
 	protected void setup() {

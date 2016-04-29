@@ -1,7 +1,6 @@
 package com.iteso.roma.agents;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.iteso.roma.utils.ACLMessageFactory;
 import com.iteso.roma.utils.AIDManager;
