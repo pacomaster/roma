@@ -228,7 +228,7 @@ public class PhaseAgent extends Agent{
 		public Coordination(String msg){
 			super();
 			if(!isNegotiating){				
-				phasePriority = Integer.parseInt(msg.split("#")[0]);
+				
 				String lanesAffectedString = msg.split("#")[1];
 				String phasesListString = msg.split("#")[2];
 				
@@ -268,6 +268,7 @@ public class PhaseAgent extends Agent{
 					}
 					this.agents = agentsAbove.split(",");
 					this.agentsAccepted = new boolean[agents.length];
+					phasePriority = Integer.parseInt(msg.split("#")[0]);
 				}			
 			}else{
 				isGreen = false;

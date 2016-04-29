@@ -72,7 +72,7 @@ public class JunctionAgent extends Agent{
 				
 				if(sumoTime > nextCycle){					
 					changePhase(myAgent);					
-					System.out.println(sumoTime + " " + junctionId + " P: " + phaseStep + " nextCycle: " + phaseTimes[phaseStep]);
+					System.out.println(sumoTime + " " + junctionId + "-" + phasesList.get(0).getPhaseId() + " P: " + phaseStep + " nextCycle: " + phaseTimes[phaseStep]);
 				}
 			}
 		});
