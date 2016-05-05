@@ -104,6 +104,7 @@ public class PhaseAgent extends Agent{
 					}									
 					reply.setContent(msgValues + "#" + msgTimes);					
 					myAgent.send(reply);
+					phaseTimes[0] = 15;
 				}
 				
 				// Request to change the priority from JunctionAgent				
