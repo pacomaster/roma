@@ -32,9 +32,11 @@ public class XMLReader {
 			BufferedWriter bw = null;
 		    PrintWriter writer = null;
 			try{
-				fw = new FileWriter(new File("romaSimulations/data/trip.csv"), true);
+				fw = new FileWriter(new File("romaSimulations/data/tripDynamic1501.csv"), true);
 				bw = new BufferedWriter(fw);
 	    	    writer = new PrintWriter(bw);
+	    	    
+	    	    writer.println("id,duration,timeLoss,departLane");
 	    	    
 	    	    for (int temp = 0; temp < nList.getLength(); temp++) {
 
@@ -42,7 +44,7 @@ public class XMLReader {
 					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 						Element eElement = (Element) nNode;
-				    	writer.println(eElement.getAttribute("id") + "," + eElement.getAttribute("duration") + "," + eElement.getAttribute("timeLoss"));
+				    	writer.println(eElement.getAttribute("id") + "," + eElement.getAttribute("duration") + "," + eElement.getAttribute("timeLoss") + "," + eElement.getAttribute("departLane"));
 
 					}
 				}

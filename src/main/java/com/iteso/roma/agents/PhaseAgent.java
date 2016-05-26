@@ -18,7 +18,13 @@ import jade.lang.acl.MessageTemplate;
 public class PhaseAgent extends Agent{
 	
 	private final int MAX_CYCLE_SECONDS = 20;
-	private final int INFINITY = Integer.MAX_VALUE;
+	private final int INF = Integer.MAX_VALUE;
+	
+	
+	private final int MIN;
+	private final int MIDDLE;
+	private final int MAX;
+	private final int UNIT;
 	
 	private String phaseId;
 	private String junctionId;
@@ -32,11 +38,30 @@ public class PhaseAgent extends Agent{
 	
 	private boolean isNegotiating = false;
 	
+	private int[][] offerTable = {
+			{0,0,0,0,0},
+			{0,0,0,0,1},
+			{0,0,0,1,2},
+			{0,0,1,2,3},
+			{0,1,2,3,4}};
+	
+	private int[][] dealTable = {
+			{INF,INF,INF,INF,INF},
+			{4  ,INF,INF,INF,INF},
+			{3  ,4  ,INF,INF,INF},
+			{2  ,3  ,4  ,INF,INF},
+			{1  ,2  ,3  ,4  ,INF}};
+	
 	public PhaseAgent(String phaseId, String junctionId, int[] phaseTimes, String[] phaseValues) {
 		this.phaseId = phaseId;
 		this.junctionId = junctionId;
 		this.phaseTimes = phaseTimes;
 		this.phaseValues = phaseValues;
+		
+		MIDDLE = phaseTimes[0];
+		UNIT = MIDDLE / 5;
+		MIN = MIDDLE - UNIT - UNIT;
+		MAX = MIDDLE + UNIT + UNIT;
 		
 		lanesPriorities = new int[phaseValues[0].length()];
 		lanesGreen = 0;
@@ -63,6 +88,16 @@ public class PhaseAgent extends Agent{
 			sum += p;
 		}
 		return sum / lanesGreen;
+	}
+	
+	private int calculateColumnPriority(){
+		int ret = 0;
+		int currentTime = MIN + UNIT;
+		while(phaseTimes[0] >= currentTime){
+			ret++;
+			currentTime += UNIT;
+		}
+		return ret;
 	}
 	
 	protected void setup(){
@@ -104,7 +139,7 @@ public class PhaseAgent extends Agent{
 					}									
 					reply.setContent(msgValues + "#" + msgTimes);					
 					myAgent.send(reply);
-					phaseTimes[0] = 15;
+					phaseTimes[0] =MIDDLE;
 				}
 				
 				// Request to change the priority from JunctionAgent				
@@ -127,33 +162,10 @@ public class PhaseAgent extends Agent{
 		 * @return number of min seconds to accept
 		 */
 		private int getDeal(){
-			switch (phasePriority){
-				case 1:
-					if(phaseTimes[0] >= 18) return INFINITY;
-					return 0;
-				case 2:
-					if(phaseTimes[0] >= 20) return INFINITY;
-					return 0;
-				case 3:
-					if(phaseTimes[0] >= 10 && phaseTimes[0] <= 12) return 1;
-					else if(phaseTimes[0] >= 13 && phaseTimes[0] <= 15)return 2;
-					else if(phaseTimes[0] == 16) return 4;
-					else if(phaseTimes[0] >= 17 && phaseTimes[0] <= 18)return 2;
-					if(phaseTimes[0] >= 19) return INFINITY;
-					return 0;
-				case 4:
-					if(phaseTimes[0] == 10) return 4;
-					else if(phaseTimes[0] >= 11 && phaseTimes[0] <= 13)return 3;
-					if(phaseTimes[0] >= 14) return INFINITY;
-					return 0;
-				case 5:
-					if(phaseTimes[0] == 10) return 6;
-					if(phaseTimes[0] == 11) return 4;
-					if(phaseTimes[0] == 12) return 3;
-					if(phaseTimes[0] >= 13) return INFINITY;
-					return 0;
-			}
-			return 0;
+			int col = calculateColumnPriority();
+			int row = phasePriority - 1;
+			
+			return dealTable[row][col];
 		}
 		
 		public void action() {
@@ -167,9 +179,9 @@ public class PhaseAgent extends Agent{
 					
 					// System.out.println("stgAge" + stageId + " propose deal: " + timeProposal); // DEBUG
 					
-					if(timeProposal == INFINITY){
+					if(timeProposal == INF){
 						reply.setPerformative(ACLMessage.REFUSE);
-						phaseTimes[0] += Integer.parseInt(msg.getContent());
+						phaseTimes[0] += Integer.parseInt(msg.getContent()) * UNIT;
 						reply.setContent(phaseId);
 						myAgent.send(reply);
 						// System.out.println("stgAge" + stageId + " Refuses"); // DEBUG
@@ -192,8 +204,8 @@ public class PhaseAgent extends Agent{
 				if(conversationId.equals("stage-accept")){
 					ACLMessage reply = msg.createReply();
 					int timeAccepted = Integer.parseInt(msg.getContent());
-					phaseTimes[0] += timeAccepted;
-					if(phaseTimes[0] > MAX_CYCLE_SECONDS) phaseTimes[0] = MAX_CYCLE_SECONDS;
+					phaseTimes[0] += timeAccepted * UNIT;
+					if(phaseTimes[0] > MAX) phaseTimes[0] = MAX;
 					reply.setPerformative(ACLMessage.INFORM);
 					reply.setContent(Integer.toString(timeAccepted));
 					myAgent.send(reply);
@@ -281,29 +293,10 @@ public class PhaseAgent extends Agent{
 		 * @return the max number of seconds to offer
 		 */
 		private int getOffer(){
-			switch (phasePriority){
-				case 1:
-					return 0;
-				case 2:
-					return 0;
-				case 3:
-					if(phaseTimes[0] == 15) return 1;
-					else if(phaseTimes[0] >= 16 && phaseTimes[0] <= 18)return 2;
-					else if(phaseTimes[0] >= 19) return 4;
-					return 0;
-				case 4:
-					if(phaseTimes[0] == 13) return 1;
-					else if(phaseTimes[0] >= 14 && phaseTimes[0] <= 17)return 2;
-					else if(phaseTimes[0] >= 18) return 4;
-					return 0;
-				case 5:
-					if(phaseTimes[0] == 11) return 1;
-					else if(phaseTimes[0] >= 12 && phaseTimes[0] <= 13)return 2;
-					else if(phaseTimes[0] >= 14 && phaseTimes[0] <= 18) return 4;
-					else if(phaseTimes[0] >= 19) return 6;
-					return 0;					
-			}
-			return 0;
+			int col = calculateColumnPriority();
+			int row = phasePriority - 1;
+			
+			return offerTable[row][col];
 		}
 		
 		public void action() {
@@ -326,8 +319,8 @@ public class PhaseAgent extends Agent{
 							myAgent.send(request);
 							step++;
 							
-							// System.out.println("stgAge" + stageId + " offerTime: " + offerTime);
-							// System.out.println("stgAge" + stageId + " offers 1s to  " + agents[currentAgent]);
+							System.out.println("stgAge" + phaseId + " offerTime: " + offerTime);
+							System.out.println("stgAge" + phaseId + " offers 1s to  " + agents[currentAgent]);
 							
 						}else{
 							
@@ -404,7 +397,8 @@ public class PhaseAgent extends Agent{
 							int timeAccepted = Integer.parseInt(msg.getContent());
 							
 							offerTime -= timeAccepted;
-							phaseTimes[0] -= timeAccepted;
+							phaseTimes[0] -= timeAccepted * UNIT;
+							if(phaseTimes[0] < MIN) phaseTimes[0] = MIN;
 							
 							ACLMessage message = ACLMessageFactory.createRequestMsg(AIDManager.getJunctionAID(junctionId, myAgent), phaseId, "stage-up");
 							myAgent.send(message);

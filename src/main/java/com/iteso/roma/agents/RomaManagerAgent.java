@@ -30,19 +30,19 @@ public class RomaManagerAgent extends Agent{
 		RouteAgent routeAgent5 = new RouteAgent("rou5", false, this.mainContainer);
 		RouteAgent routeAgent7 = new RouteAgent("rou7", true, this.mainContainer);
 		
-		int[] pTimes1 = {15,4}; // 31,4
+		int[] pTimes1 = {20,4}; // 31,4
 		String[] pValues1 = {"GGGrrrrrGGGrrrrr", "yyyrrrrryyyrrrrr"};	
 		PhaseAgent phaseAgent1 = new PhaseAgent("pha1","J5",pTimes1,pValues1);
 		
-		int[] pTimes2 = {15,4}; // 6,4
+		int[] pTimes2 = {10,4}; // 6,4
 		String[] pValues2 = {"rrrGrrrrrrrGrrrr", "rrryrrrrrrryrrrr"};	
 		PhaseAgent phaseAgent2 = new PhaseAgent("pha2","J5",pTimes2,pValues2);
 		
-		int[] pTimes3 = {15,4}; // 31,4
+		int[] pTimes3 = {20,4}; // 31,4
 		String[] pValues3 = {"rrrrGGGrrrrrGGGr", "rrrryyyrrrrryyyr"};	
 		PhaseAgent phaseAgent3 = new PhaseAgent("pha3","J5",pTimes3,pValues3);
 		
-		int[] pTimes4 = {15,4}; // 6,4
+		int[] pTimes4 = {10,4}; // 6,4
 		String[] pValues4 = {"rrrrrrrGrrrrrrrG", "rrrrrrryrrrrrrry"};	
 		PhaseAgent phaseAgent4 = new PhaseAgent("pha4","J5",pTimes4,pValues4);
 		

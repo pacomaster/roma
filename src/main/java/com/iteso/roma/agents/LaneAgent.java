@@ -61,16 +61,15 @@ public class LaneAgent extends Agent{
 					int priority = (int) (((avgVehLength * numVeh) / laneLength) * 5.0) + 1;
 					if(currentPriority != priority){
 						currentPriority = priority;
-						if(currentPriority > 2){
-							// Send message to Junction for priority
-							ACLMessage request = ACLMessageFactory.createRequestMsg(
-									AIDManager.getJunctionAID(junctionId, myAgent), 
-									laneId + "," + currentPriority,
-									"lane-change-priority");
-							myAgent.send(request);
-							
-							System.out.println("LANE: " + laneId + " PRIORITY: " + currentPriority);
-						}
+						
+						// Send message to Junction for priority
+						ACLMessage request = ACLMessageFactory.createRequestMsg(
+								AIDManager.getJunctionAID(junctionId, myAgent), 
+								laneId + "," + currentPriority,
+								"lane-change-priority");
+						myAgent.send(request);
+						
+						System.out.println("LANE: " + laneId + " PRIORITY: " + currentPriority);
 					}
 					
 				}

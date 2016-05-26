@@ -50,7 +50,10 @@ public class RouteAgent extends Agent{
 					nextCycle += 64;
 					int timeToAdd = sumoTimeFull + EXTRA_TIME;
 					
-					long automobilesToCreate = Math.round(triangularFunction(val, 64, 1, 32, signal)) * 1;
+					int multi = 1;
+					if(!signal) multi = 2;
+					
+					long automobilesToCreate = Math.round(triangularFunction(val, 64, 1, 32, signal)) * multi;
 					val++;
 					// System.out.println(sumoTime + " - GEN_" + routeId + ": " + automobilesToCreate);
 					
