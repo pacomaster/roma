@@ -3,6 +3,12 @@ package com.iteso.roma.main;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import com.iteso.roma.agents.RomaManagerAgent;
 
@@ -17,7 +23,15 @@ import trasmapi.genAPI.exceptions.TimeoutException;
 import trasmapi.genAPI.exceptions.UnimplementedMethod;
 import trasmapi.sumo.Sumo;
 
+/**
+ * This class start all the necessary frameworks for the project
+ * 
+ * @author francisco amezcua
+ *
+ */
 public class Roma {
+	
+	private static final Logger logger = Logger.getLogger(Roma.class.getName());
 	
 	static boolean JADE_GUI = true;
 	private static ProfileImpl profile;
@@ -25,10 +39,51 @@ public class Roma {
 
 	public static void main(String[] args) throws UnimplementedMethod, IOException, TimeoutException, InterruptedException {
 		
-		//Init JADE platform w/ or w/out GUI
+		// Set the log level for the project
+		// This should be done using a file but at the moment this will need to do
+		Logger log = LogManager.getLogManager().getLogger("");
+		for (Handler h : log.getHandlers()) {
+			// Set log format
+			h.setFormatter(new RomaFormatter());
+			/*
+			Set log level:
+		    SEVERE (highest)
+		    WARNING
+		    INFO
+		    CONFIG
+		    FINE
+		    FINER
+		    FINEST
+			*/
+		    h.setLevel(Level.INFO);
+		}
+		
+		// ASCII art from: http://ascii.co.uk/art/roman
+		logger.info("          ___");
+		logger.info("          \\\\||");
+		logger.info("         ,'_,-\\");     
+		logger.info("         ;'____\\");    
+		logger.info("         || =\\=|");    
+		logger.info("         ||  - |");                               
+		logger.info("     ,---'._--''-,,---------.--.----_,");
+		logger.info("    / `-._- _--/,,|  ___,,--'--'._<");
+		logger.info("   /-._,  `-.__;,,|'");
+		logger.info("  /   ;\\      / , ;");                            
+		logger.info(" /  ,' | _ - ',/, ;");
+		logger.info("(  (   |     /, ,,;");
+		logger.info(" \\  \\  |     ',,/,;");
+		logger.info("  \\  \\ |    /, / ,;");
+		logger.info(" (| ,^.|   / ,, ,/;");
+		logger.info("  `-'./ `-._,, ,/,;");
+		logger.info("       ´-._ `-._,,;");
+		logger.info("       |/,,`-._ `-.");
+		logger.info("       |, ,;, ,`-._\\");		
+		logger.info("ROMA Rises...");
+		
+		//Init JADE platform with or without GUI
 		if(JADE_GUI){
 			List<String> params = new ArrayList<String>();
-			params.add("-gui");
+			params.add("-gui");			
 			profile = new BootProfileImpl(params.toArray(new String[0]));
 		} else
 			profile = new ProfileImpl();
@@ -46,7 +101,7 @@ public class Roma {
 			return;
 		}
 		
-		//"\uD83D\uDCA9"
+		// Start traSMAPI
 		TraSMAPI api = new TraSMAPI(); 
 
 		//Create SUMO
@@ -74,6 +129,20 @@ public class Roma {
 			if(!api.simulationStep(0))
 				break;
 
+	}
+	
+	/*
+	 * Class to define the format for the log.
+	 */
+	static class RomaFormatter extends Formatter 
+	{   
+	    public RomaFormatter() { super(); }
+
+	    @Override 
+	    public String format(final LogRecord record) 
+	    {
+	        return record.getMessage() + "\n";
+	    }   
 	}
 
 }
