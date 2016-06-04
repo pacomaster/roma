@@ -1,5 +1,8 @@
 package com.iteso.roma.agents;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.iteso.roma.utils.ACLMessageFactory;
@@ -15,12 +18,37 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
+/**
+ * Class to represent a phase in SUMO.
+ * <br/>
+ * <br/>
+ * A phase is an array that represents the state of the junction each step of the phase
+ * <br/>
+ * <br/>
+ * Example:
+ * <br/>
+ * A cross street [+] 
+ * Two possible ways to move NS and EW
+ * When cars move NS the phase will look like "Gr" (green NS and red EW)
+ * Then needs to be a yellow light like this "yr"
+ * Then cars move EW the phase changes to "rG" (red NS and green EW)
+ * Finally yellow for EW which is "ry"
+ * And cycle repeats
+ * So for this we have two arrays phaseValues and phaseTimes
+ * phaseValues will contain {"Gr","yr","rG","ry"}
+ * phaseTimes will contain {15,4,15,4} the times the phase should be active
+ * <br/>
+ * <br/> 
+ * SUMO considers every single element in as a phase but for the purpose of optimizing
+ * times for cars to move, the phase will be consider Green and yellow times like {"Gr","yr"} for NS
+ * @author Francisco Amezcua
+ *
+ */
 public class PhaseAgent extends Agent{
 	
-	private final int MAX_CYCLE_SECONDS = 20;
-	private final int INF = Integer.MAX_VALUE;
+	private static final Logger logger = Logger.getLogger(JunctionAgent.class.getName());
 	
-	
+	private final int INF = Integer.MAX_VALUE;	
 	private final int MIN;
 	private final int MIDDLE;
 	private final int MAX;
@@ -233,9 +261,9 @@ public class PhaseAgent extends Agent{
 		private String agentsAbove;
 		private int currentAgent = 0;
 		private String[] agents;
-		private boolean[] agentsAccepted;
 		private int offerTime = -1;
 		private final int END_STEP = 5;
+		// isGreen means this phase is green for this lane
 		private boolean isGreen = false;
 		
 		public Coordination(String msg){
@@ -280,7 +308,6 @@ public class PhaseAgent extends Agent{
 						}
 					}
 					this.agents = agentsAbove.split(",");
-					this.agentsAccepted = new boolean[agents.length];
 					phasePriority = Integer.parseInt(msg.split("#")[0]);
 				}			
 			}else{
@@ -295,6 +322,8 @@ public class PhaseAgent extends Agent{
 		private int getOffer(){
 			int col = calculateColumnPriority();
 			int row = phasePriority - 1;
+			
+			if(logger.getLevel() == Level.FINE)logger.fine("PHASE:" + phaseId + " COL:" + col + " ROW:" + row + " OFFER:" + offerTable[row][col]);
 			
 			return offerTable[row][col];
 		}

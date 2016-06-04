@@ -25,8 +25,7 @@ import trasmapi.sumo.Sumo;
 
 /**
  * This class start all the necessary frameworks for the project
- * 
- * @author francisco amezcua
+ * @author Francisco Amezcua
  *
  */
 public class Roma {
@@ -37,6 +36,15 @@ public class Roma {
 	private static ProfileImpl profile;
 	private static ContainerController mainContainer;
 
+	/**
+	 * Main method
+	 * 
+	 * @param args This program doesn't require any arguments
+	 * @throws UnimplementedMethod
+	 * @throws IOException
+	 * @throws TimeoutException
+	 * @throws InterruptedException
+	 */
 	public static void main(String[] args) throws UnimplementedMethod, IOException, TimeoutException, InterruptedException {
 		
 		// Set the log level for the project
@@ -131,8 +139,10 @@ public class Roma {
 
 	}
 	
-	/*
+	/**
 	 * Class to define the format for the log.
+	 * @author Francisco Amezcua
+	 * 
 	 */
 	static class RomaFormatter extends Formatter 
 	{   
