@@ -181,8 +181,6 @@ public class JunctionAgent extends Agent{
 						ACLMessage request = ACLMessageFactory.createRequestMsg(receiver, "Next Phase", "phase-values-times");
 						myAgent.send(request);
 						step++;
-						
-						if(logger.getLevel() == Level.FINE)logger.info("phase-values-times: " + "Next Phase");
 					}					
 					break;
 				case 1:
@@ -280,7 +278,7 @@ public class JunctionAgent extends Agent{
 								"lane-change-priority");
 						myAgent.send(request);
 						
-						if(logger.getLevel() == Level.FINE)logger.info("J5 PHASE:" + phase.getPhaseId() + " Msg:" + priority + "#" + lanesAffected + "#" + phasesOrder);
+						// logger.info("lane-change-priority: " + phase.getPhaseId() + " Msg:" + priority + "#" + lanesAffected + "#" + phasesOrder);
 					}
 				}
 				
@@ -304,14 +302,13 @@ public class JunctionAgent extends Agent{
 						i++;
 					}
 					
-					// DEBUG See the content of the queue befor change
-					if(logger.getLevel() == Level.FINE){
-						logger.info("OLD QUEUE - " + stageId + ":");
-						for(PhaseAgent phase:phasesList){
-							logger.info(phase.getPhaseId() + " ");
-						}
-						logger.info("");
+					// DEBUG See the content of the queue before change
+					logger.info("");
+					logger.info("OLD QUEUE - " + stageId + ":");
+					for(PhaseAgent phase:phasesList){
+						logger.info(phase.getPhaseId() + " ");
 					}
+					logger.info("");
 					
 					if(index > 1){						
 						/*
@@ -359,13 +356,12 @@ public class JunctionAgent extends Agent{
 					}
 					
 					// DEBUG Check the content of the queue after change
-					if(logger.getLevel() == Level.FINE){
-						logger.info("NEW QUEUE - " + stageId + ":");
-						for(PhaseAgent phase:phasesList){
-							logger.info(phase.getPhaseId() + " ");
-						}
-						logger.info("");
+					logger.info("");
+					logger.info("NEW QUEUE - " + stageId + ":");
+					for(PhaseAgent phase:phasesList){
+						logger.info(phase.getPhaseId() + " ");
 					}
+					logger.info("");
 				}
 				
 			}

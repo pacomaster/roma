@@ -1,16 +1,15 @@
 ***Starting server on port 8820 ***
-Loading net-file from 'romaSimulations\data\romaBasic.net.xml'...  done (5ms).
+Loading net-file from 'romaSimulations\data\romaBasic.net.xml'...  done (2ms).
 Loading done.
 Simulation started with time: 0.00
-Warning: Departure time for vehicle '5000063' is in the past; using current time instead.
 Error: send failed: Socket reset by peer
 Quitting (on error).
 Performance: 
- Duration: 83274ms
- Real time factor: 9.01842
- UPS: 364.903812
+ Duration: 85916ms
+ Real time factor: 9.41617
+ UPS: 421.330136
 Vehicles: 
- Inserted: 352 (Loaded: 792)
- Running: 75
- Waiting: 363
+ Inserted: 383 (Loaded: 870)
+ Running: 81
+ Waiting: 409
 
