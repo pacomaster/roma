@@ -1,15 +1,13 @@
 ***Starting server on port 8820 ***
-Loading net-file from 'romaSimulations\data\romaBasic.net.xml'...  done (2ms).
+Loading net-file from 'romaSimulations\data\romaBasic.net.xml'...  done (1ms).
 Loading done.
 Simulation started with time: 0.00
-Error: send failed: Socket reset by peer
-Quitting (on error).
 Performance: 
- Duration: 85916ms
- Real time factor: 9.41617
- UPS: 421.330136
+ Duration: 27829ms
+ Real time factor: 9.19904
+ UPS: 86.564375
 Vehicles: 
- Inserted: 383 (Loaded: 870)
- Running: 81
- Waiting: 409
+ Inserted: 50 (Loaded: 201)
+ Running: 27
+ Waiting: 85
 
