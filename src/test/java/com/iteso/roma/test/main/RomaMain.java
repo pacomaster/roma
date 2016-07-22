@@ -2,8 +2,7 @@ package com.iteso.roma.test.main;
 
 public class RomaMain {
 	
-	private static final int N = 200;
-	private static final double M = 64.0;
+	private static final int N = 20;
 	
 	/**
 	 * Generate a triangular function
@@ -26,7 +25,8 @@ public class RomaMain {
 	public static void main(String[] args) {
 		for(int x = 0; x <= N; x ++){
 			// System.out.println(triangularFunction(x, M, 100, 1000, true));
-			System.out.println(Math.round(triangularFunction(x, 64, 1, 100, true)));
+			System.out.println(triangularFunction(x, 10, 10, 20, false));
+			// System.out.println(Math.round(triangularFunction(x, 64, 1, 100, true)));
 		}
 
 	}

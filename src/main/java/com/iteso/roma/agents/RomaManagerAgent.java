@@ -30,10 +30,10 @@ public class RomaManagerAgent extends Agent{
 	protected void setup() {
 		
 		// Automobile Generator Agents		
-		RouteAgent routeAgent1 = new RouteAgent("rou1", true, this.mainContainer);
-		RouteAgent routeAgent3 = new RouteAgent("rou3", true, this.mainContainer);
-		RouteAgent routeAgent5 = new RouteAgent("rou5", false, this.mainContainer);
-		RouteAgent routeAgent7 = new RouteAgent("rou7", true, this.mainContainer);
+//		RouteAgent routeAgent1 = new RouteAgent("rou1", true, this.mainContainer);
+//		RouteAgent routeAgent3 = new RouteAgent("rou3", true, this.mainContainer);
+//		RouteAgent routeAgent5 = new RouteAgent("rou5", false, this.mainContainer);
+//		RouteAgent routeAgent7 = new RouteAgent("rou7", true, this.mainContainer);
 		
 		int[] pTimes1 = {15,4}; // 31,4
 		String[] pValues1 = {"GGGrrrrrGGGrrrrr", "yyyrrrrryyyrrrrr"};	
@@ -73,10 +73,10 @@ public class RomaManagerAgent extends Agent{
 		
 		
 		try {
-			mainContainer.acceptNewAgent("rou1", routeAgent1).start();
-			mainContainer.acceptNewAgent("rou3", routeAgent3).start();
-			mainContainer.acceptNewAgent("rou5", routeAgent5).start();
-			mainContainer.acceptNewAgent("rou7", routeAgent7).start();
+//			mainContainer.acceptNewAgent("rou1", routeAgent1).start();
+//			mainContainer.acceptNewAgent("rou3", routeAgent3).start();
+//			mainContainer.acceptNewAgent("rou5", routeAgent5).start();
+//			mainContainer.acceptNewAgent("rou7", routeAgent7).start();
 			
 			mainContainer.acceptNewAgent("pha1", phaseAgent1).start();
 			mainContainer.acceptNewAgent("pha2", phaseAgent2).start();
