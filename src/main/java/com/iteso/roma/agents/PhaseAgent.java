@@ -234,10 +234,10 @@ public class PhaseAgent extends Agent{
 					ACLMessage reply = msg.createReply();
 					reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 					reply.setContent(phaseId);
-					myAgent.send(reply);
+					//myAgent.send(reply);
 					
 					// Start coordination with change priority
-					myAgent.addBehaviour(new Coordination(msg.getContent()));
+					//myAgent.addBehaviour(new Coordination(msg.getContent()));
 				}
 			}			
 		}
