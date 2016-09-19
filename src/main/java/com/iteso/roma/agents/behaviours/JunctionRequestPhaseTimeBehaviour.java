@@ -1,6 +1,8 @@
 package com.iteso.roma.agents.behaviours;
 
 import com.iteso.roma.agents.JunctionAgent;
+import com.iteso.roma.jade.ConversationIds;
+import com.iteso.roma.sumo.Phase;
 import com.iteso.roma.utils.ACLMessageFactory;
 import com.iteso.roma.utils.AIDManager;
 
@@ -13,10 +15,12 @@ import jade.lang.acl.MessageTemplate;
 public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 	
 	JunctionAgent junctionAgent;
+	Phase nextPhase;
 	private int step = 0;
 	
 	public JunctionRequestPhaseTimeBehaviour(Agent agent){
 		this.junctionAgent = (JunctionAgent)agent;
+		this.nextPhase = this.junctionAgent.getNextPhase();
 	}
 
 	/**
@@ -37,10 +41,10 @@ public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 				 * 
 				 * Type: REQUEST
 				 * To: Next phase in queue
-				 * Subject: phase-values-times
+				 * Subject: PHASE_VALUES_TIMES
 				 * Message: Next Phase
 				 */
-				ACLMessage request = ACLMessageFactory.createRequestMsg(receiver, "Next Phase", "phase-values-times");
+				ACLMessage request = ACLMessageFactory.createRequestMsg(receiver, "Next Phase", ConversationIds.PHASE_VALUES_TIMES);
 				myAgent.send(request);
 				step++;
 			}					
@@ -50,23 +54,23 @@ public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 			ACLMessage msg = myAgent.receive(mt);
 			if (msg != null) {
 				String conversationId = msg.getConversationId();
-				if(conversationId.equals("phase-values-times")){
+				if(conversationId.equals(ConversationIds.PHASE_VALUES_TIMES)){
 					// Convert message Format: GGrr,yyrr#31,4
 					String msgContent = msg.getContent();
 					String msgValues = msgContent.split("#")[0];
 					String msgTimes = msgContent.split("#")[1];
-					junctionAgent.setNextPhaseValues(msgValues.split(","));
-					junctionAgent.setNextPhaseTimes(new int[msgTimes.split(",").length]);
+					nextPhase.setPhaseValues(msgValues.split(","));
+					nextPhase.setPhaseTimes(new int[msgTimes.split(",").length]);
 					int i = 0;
 					for(String s : msgTimes.split(",")){
-						junctionAgent.getNextPhaseTimes()[i] = Integer.parseInt(s);
+						nextPhase.getPhaseTimes()[i] = Integer.parseInt(s);
 						i++;
 					}
 					step++;
 				}
 			}
 			break;					
-	}
+		}
 	}
 
 	@Override

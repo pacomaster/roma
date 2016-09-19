@@ -3,6 +3,7 @@ package com.iteso.roma.agents.behaviours;
 import java.util.logging.Logger;
 
 import com.iteso.roma.agents.JunctionAgent;
+import com.iteso.roma.sumo.Phase;
 
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
@@ -13,6 +14,8 @@ public class JunctionChangePhaseBehaviour extends TickerBehaviour{
 	private static final Logger logger = Logger.getLogger(JunctionChangePhaseBehaviour.class.getName());
 	
 	JunctionAgent junctionAgent;
+	Phase currentPhase = junctionAgent.getCurrentPhase();
+	Phase nextPhase = junctionAgent.getNextPhase();
 	int nextCycle;
 
 	public JunctionChangePhaseBehaviour(Agent agent, long period, int firstCycle) {
@@ -29,7 +32,7 @@ public class JunctionChangePhaseBehaviour extends TickerBehaviour{
 		// This ticker changes the current configuration of the traffic light after completes its time
 		if(sumoTime > nextCycle){					
 			changePhase(myAgent);					
-			logger.info(sumoTime + " " + junctionAgent.getJunctionId() + "-" + junctionAgent.getPhasesList().get(0).getPhaseId() + " P: " + junctionAgent.getPhaseStep() + " nextCycle: " + junctionAgent.getPhaseTimes()[junctionAgent.getPhaseStep()]);
+			logger.info(sumoTime + " " + junctionAgent.getJunctionId() + "-" + junctionAgent.getPhasesList().get(0).getPhaseId() + " P: " + currentPhase.getPhaseStep() + " nextCycle: " + currentPhase.getPhaseTimes()[currentPhase.getPhaseStep()]);
 		}
 	}
 	
@@ -38,23 +41,23 @@ public class JunctionChangePhaseBehaviour extends TickerBehaviour{
 	 * @param myAgent Reference to the current agent
 	 */
 	public void changePhase(Agent myAgent){
-		junctionAgent.setPhaseStep(junctionAgent.getPhaseStep() + 1);
+		currentPhase.setPhaseStep(currentPhase.getPhaseStep() + 1);
 		// Check for last phase
-		if(junctionAgent.getPhaseStep() == junctionAgent.getPhaseTimes().length - 1){
+		if(currentPhase.getPhaseStep() == currentPhase.getPhaseTimes().length - 1){
 			// Request next phase
 			myAgent.addBehaviour(new JunctionRequestPhaseTimeBehaviour(junctionAgent));
 		}
 		// If this is the last element change to the next phase
-		if(junctionAgent.getPhaseStep() == junctionAgent.getPhaseTimes().length){
-			junctionAgent.setPhaseStep(0);
-			junctionAgent.setPhaseValues(junctionAgent.getNextPhaseValues());
-			junctionAgent.setPhaseTimes(junctionAgent.getNextPhaseTimes());
+		if(currentPhase.getPhaseStep() == currentPhase.getPhaseTimes().length){
+			currentPhase = nextPhase;
+			currentPhase.setPhaseStep(0);
+			
 			junctionAgent.getPhasesList().add(junctionAgent.getPhasesList().get(0));
 			junctionAgent.getPhasesList().remove(0);
 		}
 		// Changes the phase in SUMO
-		junctionAgent.getSumoTrafficLight().setState(junctionAgent.getPhaseValues()[junctionAgent.getPhaseStep()]);
-		nextCycle += junctionAgent.getPhaseTimes()[junctionAgent.getPhaseStep()];
+		junctionAgent.getSumoTrafficLight().setState(currentPhase.getPhaseValues()[currentPhase.getPhaseStep()]);
+		nextCycle += currentPhase.getPhaseTimes()[currentPhase.getPhaseStep()];
 	}
 
 }

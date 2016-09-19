@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import com.iteso.roma.agents.JunctionAgent;
 import com.iteso.roma.agents.PhaseAgent;
+import com.iteso.roma.jade.ConversationIds;
 import com.iteso.roma.utils.ACLMessageFactory;
 import com.iteso.roma.utils.AIDManager;
 
@@ -31,7 +32,7 @@ public class JunctionRequestMessageBehaviour extends CyclicBehaviour{
 			String conversationId = msg.getConversationId();
 			
 			// Request change of priority from LaneAgent				
-			if(conversationId.equals("lane-change-priority")){
+			if(conversationId.equals(ConversationIds.LANE_CHANGE_PRIORITY)){
 				
 				// Convert message Format: laneId,priority	
 				String content = msg.getContent();
@@ -71,22 +72,22 @@ public class JunctionRequestMessageBehaviour extends CyclicBehaviour{
 				 * 
 				 * Type: REQUEST
 				 * To: Every phase
-				 * Subject: lane-change-priority
+				 * Subject: LANE_CHANGE_PRIORITY
 				 * Message: [priority]#[lanesAffectedArray]#[phasesOrderArray]
 				 */
 				for(PhaseAgent phase:junctionAgent.getPhasesList()){						
 					ACLMessage request = ACLMessageFactory.createRequestMsg(
 							AIDManager.getPhaseAID(phase.getPhaseId(), myAgent), 
 							priority + "#" + lanesAffected + "#" + phasesOrder,
-							"lane-change-priority");
+							ConversationIds.LANE_CHANGE_PRIORITY);
 					myAgent.send(request);
 					
-					// logger.info("lane-change-priority: " + phase.getPhaseId() + " Msg:" + priority + "#" + lanesAffected + "#" + phasesOrder);
+					// logger.info(ConversationIds.LANE_CHANGE_PRIORITY + ": " + phase.getPhaseId() + " Msg:" + priority + "#" + lanesAffected + "#" + phasesOrder);
 				}
 			}
 			
 			// Request from a PhaseAgent to get up in the order
-			if(conversationId.equals("stage-up")){
+			if(conversationId.equals(ConversationIds.PHASE_UP_QUEUE)){
 				String content = msg.getContent();
 				// Convert message Format: phaseId
 				String stageId = content;
@@ -119,7 +120,7 @@ public class JunctionRequestMessageBehaviour extends CyclicBehaviour{
 					 * 
 					 * Type: AGREE
 					 * To: Phase that requested to go up one position
-					 * Subject: stage-up
+					 * Subject: PHASE_UP_QUEUE
 					 * Message: 
 					 */
 					ACLMessage reply = msg.createReply();
@@ -136,7 +137,7 @@ public class JunctionRequestMessageBehaviour extends CyclicBehaviour{
 					 * 
 					 * Type: INFORM
 					 * To: Phase that requested to go up one position
-					 * Subject: stage-up
+					 * Subject: PHASE_UP_QUEUE
 					 * Message: 
 					 */
 					reply = msg.createReply();
@@ -149,7 +150,7 @@ public class JunctionRequestMessageBehaviour extends CyclicBehaviour{
 					 * 
 					 * Type: REFUSE
 					 * To: Phase that requested to go up one position
-					 * Subject: stage-up
+					 * Subject: PHASE_UP_QUEUE
 					 * Message: 
 					 */
 					ACLMessage reply = msg.createReply();

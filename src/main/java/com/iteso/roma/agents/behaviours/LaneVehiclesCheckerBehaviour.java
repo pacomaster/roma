@@ -3,6 +3,7 @@ package com.iteso.roma.agents.behaviours;
 import java.util.logging.Logger;
 
 import com.iteso.roma.agents.LaneAgent;
+import com.iteso.roma.jade.ConversationIds;
 import com.iteso.roma.sumo.VehicleAttributes;
 import com.iteso.roma.utils.ACLMessageFactory;
 import com.iteso.roma.utils.AIDManager;
@@ -45,7 +46,7 @@ public class LaneVehiclesCheckerBehaviour extends TickerBehaviour{
 		if(laneAgent.getCurrentPriority() != priority){
 			laneAgent.setCurrentPriority(priority);			
 			sendChangePriorityMessage();			
-			logger.fine("lane-change-priority: " + laneAgent.getLaneId() + "," + laneAgent.getCurrentPriority());
+			logger.fine(ConversationIds.LANE_CHANGE_PRIORITY + ": " + laneAgent.getLaneId() + "," + laneAgent.getCurrentPriority());
 		}
 	}
 
@@ -72,9 +73,8 @@ public class LaneVehiclesCheckerBehaviour extends TickerBehaviour{
 		
 		AID receiverJunction = AIDManager.getJunctionAID(laneAgent.getJunctionId(), myAgent);
 		String messageContent = laneAgent.getLaneId() + "," + laneAgent.getCurrentPriority();
-		String conversationId = "lane-change-priority";
 		
-		ACLMessage request = ACLMessageFactory.createRequestMsg(receiverJunction, messageContent, conversationId);
+		ACLMessage request = ACLMessageFactory.createRequestMsg(receiverJunction, messageContent, ConversationIds.LANE_CHANGE_PRIORITY);
 		myAgent.send(request);
 	}
 

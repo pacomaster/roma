@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import com.iteso.roma.agents.behaviours.JunctionChangePhaseBehaviour;
 import com.iteso.roma.agents.behaviours.JunctionRequestMessageBehaviour;
 import com.iteso.roma.jade.ServiceRegister;
+import com.iteso.roma.sumo.Phase;
 import com.iteso.roma.utils.TimeManager;
 
 import jade.core.Agent;
@@ -50,14 +51,10 @@ public class JunctionAgent extends Agent{
 	
 	private String junctionId;
 	private SumoTrafficLight myself;
-	
-	private String[] phaseValues;
-	private int[] phaseTimes;
-	private String[] nextPhaseValues;
-	private int[] nextPhaseTimes;
-	private int phaseStep = 0;
+	private Phase currentPhase;
+	private Phase nextPhase;
 	private int firstCycle;
-	
+
 	/**
 	 * This list contains the next phase to put into the traffic light
 	 * Remember phase consist of Green and yellow lights
@@ -71,13 +68,12 @@ public class JunctionAgent extends Agent{
 	 * @param phaseValues Array of string configuration for the current phase
 	 * @param phasesList ArrayList of PhaseAgents with reference and order of the phases to implement
 	 */
-	public JunctionAgent(String junctionId, int[] phaseTimes, String[] phaseValues, ArrayList<PhaseAgent> phasesList) {
+	public JunctionAgent(String junctionId, ArrayList<PhaseAgent> phasesList, Phase firstPhase) {
 		this.junctionId = junctionId;
 		this.myself = new SumoTrafficLight(junctionId);
-		this.phaseTimes = phaseTimes;
-		this.phaseValues = phaseValues;
+		this.currentPhase = firstPhase;
 		this.phasesList = phasesList;
-		firstCycle = phaseTimes[phaseStep];
+		firstCycle = this.currentPhase.getGreenTime();
 	}
 	
 	/**
@@ -96,48 +92,16 @@ public class JunctionAgent extends Agent{
 	public SumoTrafficLight getSumoTrafficLight() {
 		return myself;
 	}
-
-	public String[] getPhaseValues() {
-		return phaseValues;
-	}
-	
-	public void setPhaseValues(String[] phaseValues) {
-		this.phaseValues = phaseValues;
-	}
-	
-	public void setPhaseTimes(int[] phaseTimes) {
-		this.phaseTimes = phaseTimes;
-	}
-
-	public int[] getPhaseTimes() {
-		return phaseTimes;
-	}
-	
-	public void setNextPhaseValues(String[] nextPhaseValues) {
-		this.nextPhaseValues = nextPhaseValues;
-	}
-
-	public String[] getNextPhaseValues() {
-		return nextPhaseValues;
-	}
-	
-	public void setNextPhaseTimes(int[] nextPhaseTimes) {
-		this.nextPhaseTimes = nextPhaseTimes;
-	}
-
-	public int[] getNextPhaseTimes() {
-		return nextPhaseTimes;
-	}
-	
-	public void setPhaseStep(int phaseStep) {
-		this.phaseStep = phaseStep;
-	}
-
-	public int getPhaseStep() {
-		return phaseStep;
-	}
 	
 	public ArrayList<PhaseAgent> getPhasesList() {
 		return phasesList;
+	}
+	
+	public Phase getCurrentPhase() {
+		return currentPhase;
+	}
+
+	public Phase getNextPhase() {
+		return nextPhase;
 	}
 }

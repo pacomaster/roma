@@ -2,6 +2,7 @@ package com.iteso.roma.agents;
 
 import java.util.ArrayList;
 
+import com.iteso.roma.sumo.Phase;
 import com.iteso.roma.utils.TimeManager;
 
 import jade.core.Agent;
@@ -63,14 +64,16 @@ public class RomaManagerAgent extends Agent{
 		LaneAgent laneAgent70 = new LaneAgent("E7_0","J5");
 		LaneAgent laneAgent71 = new LaneAgent("E7_1","J5");
 		
-		JunctionAgent junctonAgent5 = new JunctionAgent("J5", pTimes1, pValues1, phasesList);
+		Phase firstPhase = new Phase(pTimes1, pValues1);
+		
+		JunctionAgent junctonAgent5 = new JunctionAgent("J5", phasesList, firstPhase);
 		
 		
 		try {			
 			mainContainer.acceptNewAgent("pha1", phaseAgent1).start();
 			mainContainer.acceptNewAgent("pha2", phaseAgent2).start();
 			mainContainer.acceptNewAgent("pha3", phaseAgent3).start();
-			mainContainer.acceptNewAgent("pha4", phaseAgent4).start();			
+			mainContainer.acceptNewAgent("pha4", phaseAgent4).start();
 			
 			mainContainer.acceptNewAgent("E1_0", laneAgent10).start();
 			mainContainer.acceptNewAgent("E1_1", laneAgent11).start();
