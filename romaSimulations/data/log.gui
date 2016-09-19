@@ -2,12 +2,14 @@
 Loading net-file from 'romaSimulations\data\romaBasic.net.xml'...  done (2ms).
 Loading done.
 Simulation started with time: 0.00
+Error: send failed: Socket reset by peer
+Quitting (on error).
 Performance: 
- Duration: 47109ms
- Real time factor: 9.70091
- UPS: 313.952748
+ Duration: 45975ms
+ Real time factor: 8.87439
+ UPS: 273.148450
 Vehicles: 
- Inserted: 141 (Loaded: 253)
- Running: 43
- Waiting: 87
+ Inserted: 130 (Loaded: 253)
+ Running: 46
+ Waiting: 73
 

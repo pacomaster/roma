@@ -14,14 +14,12 @@ import trasmapi.sumo.SumoLane;
  */
 public class LaneAgent extends Agent{
 	
-	String laneId;
 	SumoLane myself;
-	String junctionId;
-	
+	String laneId;	
+	String junctionId;	
 	int currentPriority = 1;
-	
-
 	int startCycle = 60;
+	
 	/**
 	 * Constructor
 	 * @param laneId The name of the lane
@@ -31,6 +29,14 @@ public class LaneAgent extends Agent{
 		this.laneId = laneId;
 		this.myself = new SumoLane(laneId);
 		this.junctionId = junctionId;
+	}
+	
+	/**
+	 * This class setups the agent
+	 */
+	protected void setup(){
+		ServiceRegister.register(this, laneId);
+		addBehaviour(new LaneVehiclesCheckerBehaviour(this, TimeManager.getSeconds(1), startCycle));
 	}
 	
 	public SumoLane getSumoLane(){
@@ -51,15 +57,6 @@ public class LaneAgent extends Agent{
 	
 	public int getCurrentPriority() {
 		return currentPriority;
-	}
-	
-	
-	/**
-	 * This class setups the agent
-	 */
-	protected void setup(){
-		ServiceRegister.register(this, laneId);
-		addBehaviour(new LaneVehiclesCheckerBehaviour(this, TimeManager.getSeconds(1), startCycle));
 	}
 
 }

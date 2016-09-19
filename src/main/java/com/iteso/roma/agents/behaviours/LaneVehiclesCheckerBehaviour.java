@@ -56,7 +56,7 @@ public class LaneVehiclesCheckerBehaviour extends TickerBehaviour{
 		double avgVehLength = vehicleAttributes.getAvgVehLength();
 		double minGap = vehicleAttributes.getMinGap();
 		
-		return (int) (((avgVehLength * numVeh + minGap * numVeh) / laneLength) * 5.0) + 1;
+		return (int) (((avgVehLength*numVeh + minGap*numVeh)/laneLength)*5.0) + 1;
 	}
 	
 	private void sendChangePriorityMessage(){
