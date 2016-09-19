@@ -1,13 +1,13 @@
 ***Starting server on port 8820 ***
-Loading net-file from 'romaSimulations\data\romaBasic.net.xml'...  done (1ms).
+Loading net-file from 'romaSimulations\data\romaBasic.net.xml'...  done (2ms).
 Loading done.
 Simulation started with time: 0.00
 Performance: 
- Duration: 369235ms
- Real time factor: 9.74718
- UPS: 351.683887
+ Duration: 47109ms
+ Real time factor: 9.70091
+ UPS: 313.952748
 Vehicles: 
- Inserted: 884 (Loaded: 991)
- Running: 46
- Waiting: 107
+ Inserted: 141 (Loaded: 253)
+ Running: 43
+ Waiting: 87
 

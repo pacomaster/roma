@@ -41,22 +41,5 @@ public class AIDManager {
 		}
 		return receiver;
 	}
-	
-	public static AID getLaneAID(String laneId, Agent theAgent){
-		// Search lane service receiver
-		DFAgentDescription template = new DFAgentDescription();
-		ServiceDescription sd = new ServiceDescription();
-		sd.setType(laneId);
-		template.addServices(sd);
-		AID receiver =  null;
-		try {
-			DFAgentDescription[] result = DFService.search(theAgent, template); 
-			if(result.length > 0) receiver = result[0].getName();
-		}
-		catch (FIPAException fe) {
-			fe.printStackTrace();
-		}
-		return receiver;
-	}
 
 }

@@ -1,11 +1,14 @@
 package com.iteso.roma.agents;
 
-import java.util.Arrays;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.iteso.roma.negotiation.DealTables;
+import com.iteso.roma.negotiation.Offer;
+import com.iteso.roma.negotiation.OfferTables;
+import com.iteso.roma.negotiation.PhaseStatus;
+import com.iteso.roma.negotiation.TableNegotiationResolver;
 import com.iteso.roma.utils.ACLMessageFactory;
 import com.iteso.roma.utils.AIDManager;
 
@@ -49,7 +52,6 @@ public class PhaseAgent extends Agent{
 	
 	private static final Logger logger = Logger.getLogger(JunctionAgent.class.getName());
 	
-	private final int INF = Integer.MAX_VALUE;	
 	private final int MIN;
 	private final int MIDDLE;
 	private final int MAX;
@@ -67,19 +69,9 @@ public class PhaseAgent extends Agent{
 	
 	private boolean isNegotiating = false;
 	
-	private int[][] offerTable = {
-			{0,0,0,0,1},
-			{0,0,0,1,1},
-			{0,0,1,1,2},
-			{0,1,1,2,3},
-			{1,1,2,3,4}};
+	TableNegotiationResolver negotiationResolver = new TableNegotiationResolver(OfferTables.tableA, DealTables.tableA);
 	
-	private int[][] dealTable = {
-			{2  ,1  ,1  ,1  ,INF},
-			{3  ,2  ,1  ,1  ,INF},
-			{4  ,3  ,2  ,1  ,INF},
-			{4  ,3  ,2  ,INF,INF},
-			{INF,INF,INF,INF,INF}};
+	
 	
 	/**
 	 * Constructor
@@ -145,20 +137,6 @@ public class PhaseAgent extends Agent{
 			if(p > max) max = p;
 		}
 		return max;
-	}
-	
-	/**
-	 * Checks currentTime to know the column space in table.
-	 * @return
-	 */
-	private int calculateColumnPriority(){
-		int ret = 0;
-		int currentTime = MIN + UNIT;
-		while(phaseTimes[0] >= currentTime){
-			ret++;
-			currentTime += UNIT;
-		}
-		return ret;
 	}
 	
 	/**
@@ -349,20 +327,6 @@ public class PhaseAgent extends Agent{
 			}
 		}
 		
-		/**
-		 * Method to calculate the max offer to present to other agents
-		 * @return the max number of seconds to offer
-		 */
-		private int getOffer(){
-			int col = calculateColumnPriority();
-			int row = phasePriority - 1;
-			
-			// logger.info("PHASE: " + phaseId + " COL: " + (col + 1) + " ROW: " + (row + 1));
-			// logger.info("OFFER: " + offerTable[row][col]);
-			
-			return offerTable[row][col];
-		}
-		
 		public void action() {
 			switch(step){
 				case 0:
@@ -374,7 +338,7 @@ public class PhaseAgent extends Agent{
 						isNegotiating = true;
 						System.out.println("phaAge: " + phaseId + " UP PHASES: " + agentsAbove);
 						
-						if(offerTime == -1) offerTime = getOffer(); // Get offer time value only first time						
+						if(offerTime == -1) offerTime = negotiationResolver.proposeOffer(getPhaseStatus()).offeredUnits; // Get offer time value only first time						
 						if(offerTime > 0){							
 							// Send CFP to next stageId in the top of the list
 							
@@ -551,18 +515,7 @@ public class PhaseAgent extends Agent{
 		}
 	}
 	
-private class CoordinationCFP extends CyclicBehaviour {
-		
-		/**
-		 * Function to calculate the min deal to accept
-		 * @return number of min seconds to accept
-		 */
-		private int getDeal(){
-			int col = calculateColumnPriority();
-			int row = phasePriority - 1;
-			
-			return dealTable[row][col];
-		}
+	private class CoordinationCFP extends CyclicBehaviour {
 		
 		public void action() {
 			MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.CFP);			
@@ -571,22 +524,23 @@ private class CoordinationCFP extends CyclicBehaviour {
 				String conversationId = msg.getConversationId();
 				if(conversationId.equals("stage-coordination")){
 					ACLMessage reply = msg.createReply();
-					int timeProposal = getDeal();
 					
-					System.out.println("phaAge: " + phaseId + " propose deal: " + timeProposal); // DEBUG
+					Offer offer = new Offer();
+					offer.offeredUnits = Integer.parseInt(msg.getContent()); 
 					
-					if(timeProposal == INF){
+					if(!negotiationResolver.acceptOffer(getPhaseStatus(), offer)){
 						reply.setPerformative(ACLMessage.REFUSE);
 						phaseTimes[0] += Integer.parseInt(msg.getContent()) * UNIT;
 						reply.setContent(phaseId);
 						myAgent.send(reply);
 						System.out.println("phaAge: " + phaseId + " Refuses"); // DEBUG
 					}else{
-						int timeCFP = Integer.parseInt(msg.getContent());
-						if(timeCFP > timeProposal)timeProposal = timeCFP;
+						int timeProposal = negotiationResolver.proposeCounterOffer(getPhaseStatus()).offeredUnits;
+						if(offer.offeredUnits > timeProposal)timeProposal = offer.offeredUnits;
 						reply.setPerformative(ACLMessage.PROPOSE);
 						reply.setContent(Integer.toString(timeProposal));
 						myAgent.send(reply);
+						System.out.println("phaAge: " + phaseId + " propose deal: " + timeProposal); // DEBUG
 						System.out.println("phaAge: " + phaseId + " Proposes"); // DEBUG
 					}
 				}
@@ -626,5 +580,16 @@ private class CoordinationCFP extends CyclicBehaviour {
 	public String getPhaseId(){
 		return phaseId;
 	}
+	
+	private PhaseStatus getPhaseStatus(){
+		PhaseStatus status = new PhaseStatus();
+		
+		status.idealTime = MIDDLE;
+		status.priority = phasePriority;
+		status.secondsLeft =phaseTimes[0];
+		
+		return status;
+	}
+	
 	
 }
