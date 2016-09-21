@@ -14,13 +14,15 @@ public class JunctionChangePhaseBehaviour extends TickerBehaviour{
 	private static final Logger logger = Logger.getLogger(JunctionChangePhaseBehaviour.class.getName());
 	
 	JunctionAgent junctionAgent;
-	Phase currentPhase = junctionAgent.getCurrentPhase();
-	Phase nextPhase = junctionAgent.getNextPhase();
+	Phase currentPhase;
+	Phase nextPhase;
 	int nextCycle;
 
 	public JunctionChangePhaseBehaviour(Agent agent, long period, int firstCycle) {
 		super(agent, period);
 		this.junctionAgent = (JunctionAgent)agent;
+		this.currentPhase = junctionAgent.getCurrentPhase();
+		this.nextPhase = junctionAgent.getNextPhase();
 		this.nextCycle = firstCycle;
 	}
 
@@ -45,7 +47,7 @@ public class JunctionChangePhaseBehaviour extends TickerBehaviour{
 		// Check for last phase
 		if(currentPhase.getPhaseStep() == currentPhase.getPhaseTimes().length - 1){
 			// Request next phase
-			myAgent.addBehaviour(new JunctionRequestPhaseTimeBehaviour(junctionAgent));
+			myAgent.addBehaviour(new JunctionRequestPhaseTimeBehaviour(this.junctionAgent));
 		}
 		// If this is the last element change to the next phase
 		if(currentPhase.getPhaseStep() == currentPhase.getPhaseTimes().length){

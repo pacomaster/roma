@@ -1,0 +1,38 @@
+***Starting server on port 8820 ***
+Loading net-file from 'romaSimulations\data\romaBasic.net.xml'...  done (7ms).
+Loading done.
+Simulation started with time: 0.00
+Warning: Teleporting vehicle 'veh438'; waited too long (yield), lane='E5_0', time=1983.00.
+Warning: Vehicle 'veh438' ends teleporting on edge 'E2', time 1983.00.
+Warning: Teleporting vehicle 'veh439'; waited too long (yield), lane='E5_1', time=1984.00.
+Warning: Vehicle 'veh439' ends teleporting on edge 'E2', time 1984.00.
+Warning: Teleporting vehicle 'veh440'; waited too long (yield), lane='E5_1', time=2289.00.
+Warning: Teleporting vehicle 'veh441'; waited too long (yield), lane='E5_0', time=2289.00.
+Warning: Vehicle 'veh440' ends teleporting on edge 'E2', time 2289.00.
+Warning: Vehicle 'veh441' ends teleporting on edge 'E2', time 2289.00.
+Warning: Teleporting vehicle 'veh443'; waited too long (yield), lane='E5_1', time=2594.00.
+Warning: Teleporting vehicle 'veh442'; waited too long (yield), lane='E5_0', time=2594.00.
+Warning: Vehicle 'veh443' ends teleporting on edge 'E2', time 2594.00.
+Warning: Vehicle 'veh442' ends teleporting on edge 'E2', time 2594.00.
+Warning: Teleporting vehicle 'veh567'; waited too long (yield), lane='E5_0', time=3195.00.
+Warning: Vehicle 'veh567' ends teleporting on edge 'E2', time 3195.00.
+Warning: Teleporting vehicle 'veh568'; waited too long (yield), lane='E5_1', time=3198.00.
+Warning: Vehicle 'veh568' ends teleporting on edge 'E2', time 3198.00.
+Warning: Teleporting vehicle 'veh569'; waited too long (yield), lane='E5_0', time=3499.00.
+Warning: Vehicle 'veh569' ends teleporting on edge 'E2', time 3499.00.
+Warning: Teleporting vehicle 'veh570'; waited too long (yield), lane='E5_1', time=3502.00.
+Warning: Vehicle 'veh570' ends teleporting on edge 'E2', time 3502.00.
+Warning: Teleporting vehicle 'veh712'; waited too long (yield), lane='E5_0', time=4267.00.
+Warning: Vehicle 'veh712' ends teleporting on edge 'E2', time 4267.00.
+Warning: Teleporting vehicle 'veh713'; waited too long (yield), lane='E5_1', time=4270.00.
+Warning: Vehicle 'veh713' ends teleporting on edge 'E2', time 4270.00.
+Performance: 
+ Duration: 500763ms
+ Real time factor: 9.98077
+ UPS: 336.935836
+Vehicles: 
+ Inserted: 905 (Loaded: 991)
+ Running: 51
+ Waiting: 86
+Teleports: 12 (Yield: 12)
+

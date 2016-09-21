@@ -65,8 +65,9 @@ public class RomaManagerAgent extends Agent{
 		LaneAgent laneAgent71 = new LaneAgent("E7_1","J5");
 		
 		Phase firstPhase = new Phase(pTimes1, pValues1);
+		Phase nextPhase = new Phase(pTimes2, pValues2);
 		
-		JunctionAgent junctonAgent5 = new JunctionAgent("J5", phasesList, firstPhase);
+		JunctionAgent junctonAgent5 = new JunctionAgent("J5", phasesList, firstPhase, nextPhase);
 		
 		
 		try {			

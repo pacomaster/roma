@@ -20,7 +20,7 @@ public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 	
 	public JunctionRequestPhaseTimeBehaviour(Agent agent){
 		this.junctionAgent = (JunctionAgent)agent;
-		this.nextPhase = this.junctionAgent.getNextPhase();
+		this.nextPhase = junctionAgent.getNextPhase();
 	}
 
 	/**

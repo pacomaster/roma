@@ -68,10 +68,11 @@ public class JunctionAgent extends Agent{
 	 * @param phaseValues Array of string configuration for the current phase
 	 * @param phasesList ArrayList of PhaseAgents with reference and order of the phases to implement
 	 */
-	public JunctionAgent(String junctionId, ArrayList<PhaseAgent> phasesList, Phase firstPhase) {
+	public JunctionAgent(String junctionId, ArrayList<PhaseAgent> phasesList, Phase firstPhase, Phase nextPhase) {
 		this.junctionId = junctionId;
 		this.myself = new SumoTrafficLight(junctionId);
 		this.currentPhase = firstPhase;
+		this.nextPhase = nextPhase;
 		this.phasesList = phasesList;
 		firstCycle = this.currentPhase.getGreenTime();
 	}
