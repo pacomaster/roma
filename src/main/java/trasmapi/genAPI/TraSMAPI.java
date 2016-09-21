@@ -12,6 +12,10 @@ public class TraSMAPI {
 	static Simulator sim;
 	
 
+	public static Simulator getSim() {
+		return sim;
+	}
+
 	/**
 	 * Initializes TraSMAPI for the given simulator
 	 */
@@ -21,7 +25,7 @@ public class TraSMAPI {
 	/**
 	 * Initializes TraSMAPI for the given simulator
 	 * @param simulator - simulator identification tag
-	 * @throws java.io.IOException
+	 * @throws IOException
 	 */
 	public TraSMAPI(String simulator) {
 		if (simulator=="sumo" || simulator=="guisim") {
@@ -30,8 +34,8 @@ public class TraSMAPI {
 	}
 	/**
 	 * launches the Simulator Process
-	 * @throws java.io.IOException
-	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
+	 * @throws IOException
+	 * @throws UnimplementedMethod 
 	 */
 	public void launch() throws IOException, UnimplementedMethod {
 		sim.launch();
@@ -39,10 +43,10 @@ public class TraSMAPI {
 	
 	/**
 	 * method used to connect to the simulator (using sockets)
-	 * @throws java.net.UnknownHostException
-	 * @throws java.io.IOException
-	 * @throws trasmapi.genAPI.exceptions.TimeoutException
-	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 * @throws TimeoutException
+	 * @throws UnimplementedMethod 
 	 */
 	public void connect() throws UnknownHostException, IOException, TimeoutException, UnimplementedMethod {
 		sim.connect();
@@ -50,8 +54,8 @@ public class TraSMAPI {
 	
 	/**
 	 * method used to close the simulator
-	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
-	 * @throws java.io.IOException
+	 * @throws UnimplementedMethod 
+	 * @throws IOException 
 	 */
 	public void close() throws UnimplementedMethod, IOException {
 		sim.close();
@@ -62,7 +66,7 @@ public class TraSMAPI {
 	/**
 	 * method used to advance k steps in the simulation
 	 * @param k - number of simulation steps to be simulated
-	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
+	 * @throws UnimplementedMethod 
 	 */
 	public boolean simulationStep(int k) throws UnimplementedMethod {
 		return sim.simulationStep(k);

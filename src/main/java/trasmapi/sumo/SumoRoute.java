@@ -103,7 +103,7 @@ public class SumoRoute extends Route{
 
 		try {
 			
-			ResponseMessage rspMsg = SumoCom.query(reqMsg);
+			SumoCom.query(reqMsg);
 			
 			
 		} catch (IOException e) {

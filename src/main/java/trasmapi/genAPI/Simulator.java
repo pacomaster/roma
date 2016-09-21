@@ -13,8 +13,8 @@ public class Simulator {
 	/**
 	 * launches the Simulator Process
 	 * @param params 
-	 * @throws java.io.IOException
-	 * @throws trasmapi.genAPI.exceptions.UnimplementedMethod
+	 * @throws IOException 
+	 * @throws UnimplementedMethod 
 	 */
 	public void launch() throws IOException, UnimplementedMethod {
 		throw new UnimplementedMethod();
@@ -22,9 +22,9 @@ public class Simulator {
 	
 	/**
 	 * method used to connect to the simulator (using sockets)
-	 * @throws java.net.UnknownHostException
-	 * @throws java.io.IOException
-	 * @throws trasmapi.genAPI.exceptions.TimeoutException
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 * @throws TimeoutException
 	 */
 	public void connect() throws UnknownHostException, IOException, TimeoutException, UnimplementedMethod {
 		throw new UnimplementedMethod();
@@ -32,7 +32,7 @@ public class Simulator {
 	
 	/**
 	 * method used to close the simulator
-	 * @throws java.io.IOException
+	 * @throws IOException 
 	 */
 	public void close() throws UnimplementedMethod, IOException {
 		throw new UnimplementedMethod();
@@ -60,14 +60,6 @@ public class Simulator {
 	}
 
 	public void start() throws UnimplementedMethod {
-		throw new UnimplementedMethod();
-	}
-
-	public int getCurrentTicks() throws UnimplementedMethod {
-		throw new UnimplementedMethod();
-	}
-
-	public void subscribeTicksInt() throws UnimplementedMethod {
 		throw new UnimplementedMethod();
 	}
 }

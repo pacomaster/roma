@@ -44,9 +44,8 @@ public class SumoCom {
 	public static ArrayList<String> vehicleTypesIDs = new ArrayList<String>();
 
 	public static ArrayList<SumoVehicle> vehicles = new ArrayList<SumoVehicle>();
-	private static ArrayList<SumoPolygon> polygons = new ArrayList<SumoPolygon>();
+//	private static ArrayList<SumoPolygon> polygons = new ArrayList<SumoPolygon>();
 	public static ArrayList<SumoRoute> routes = new ArrayList<SumoRoute>();
-    public static ArrayList<SumoRoute> sim = new ArrayList<SumoRoute>();
 
 	private static ArrayList<SumoEdge> edges = new ArrayList<SumoEdge>();
 
@@ -55,13 +54,13 @@ public class SumoCom {
 	public static ArrayList<String> arrivedVehicles = new ArrayList<String>();
 
 	private static int simStartStep = 0;
-	private static int simEndStep = 100000000;
+	private static int simEndStep = 10000000;
 
 	public SumoCom(){
 		routesIDs = new ArrayList<String>();
 
 		vehicles = new ArrayList<SumoVehicle>();
-		polygons = new ArrayList<SumoPolygon>();
+//		polygons = new ArrayList<SumoPolygon>();
 		routes = new ArrayList<SumoRoute>();
 
 		edges = new ArrayList<SumoEdge>();
@@ -123,7 +122,7 @@ public class SumoCom {
 
 		if (!connected) {
 			proc.destroy();
-			System.exit(0);
+			throw new TimeoutException();
 		}
 
 		try {
@@ -175,6 +174,9 @@ public class SumoCom {
 
 			ResponseMessage response = query(reqMsg);
 
+			//	System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+			//	response.print();
 
 			if(response.status.getResult() == Constants.RTYPE_OK)
 				parseSubscriptions(response);
@@ -330,6 +332,7 @@ public class SumoCom {
 			for(SumoVehicle v: vehicles)
 				if(v.id.equals(s)){
 					v.arrived = true;
+					v.alive = false;
 					v.arrivalTime = currentSimStep;
 				}
 		}
@@ -484,7 +487,7 @@ public class SumoCom {
 
 		try {
 
-			ResponseMessage rspMsg = query(reqMsg);
+			query(reqMsg);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -540,9 +543,11 @@ public class SumoCom {
 		routesIDs = getAllRoutesIds();
 
 		if(routesIDs == null){
-			System.out.println("NULL routesIds");
+			//<System.out.println("NULL routesIds");
 			return;
 		}
+
+		System.out.println("numIds : " + routesIDs.size());
 
 		RequestMessage reqMsg = new RequestMessage();
 
@@ -605,69 +610,40 @@ public class SumoCom {
 
 		try {
 
-			ResponseMessage rspMsg = query(reqMsg);
+			query(reqMsg);
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-    public synchronized void subscribeTicks() {
-
-        Command cmd = new Command(Constants.CMD_SUBSCRIBE_SIM_VARIABLE);
-
-        ArrayList<Integer> variableList = new ArrayList<Integer>();
-        variableList.add(0x70);
-
-
-        Content cnt = new Content(simStartStep,simEndStep,"dummy",variableList);
-
-        cmd.setContent(cnt);
-
-        //	cmd.print("  --- Command SubscribeVehicle id: "+id);
-
-        RequestMessage reqMsg = new RequestMessage();
-
-        reqMsg.addCommand(cmd);
-
-        try {
-
-            ResponseMessage rspMsg = query(reqMsg);
-            if(rspMsg.status.getResult() == Constants.RTYPE_OK) {
-                parseSubscriptions(rspMsg);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-	public static void subscribeContexPolygon(SumoPolygon polygon) {
-
-		Command cmd = new Command(0x88);
-
-		int contextDomain = Constants.CMD_GET_VEHICLE_VARIABLE;
-
-		ArrayList<Integer> variableList = new ArrayList<Integer>();
-		variableList.add(Constants.VAR_SPEED);
-
-		Content cnt = new Content(simStartStep,simEndStep,polygon.id,contextDomain,polygon.sensingRadius,variableList);
-
-		cmd.setContent(cnt);
-
-		//	cmd.print("  --- Command subscribeContexPolygon id: "+polygon.id);
-
-		RequestMessage reqMsg = new RequestMessage();
-
-		reqMsg.addCommand(cmd);
-
-		try {
-
-			ResponseMessage rspMsg = query(reqMsg);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void subscribeContexPolygon(SumoPolygon polygon) {
+//
+//		Command cmd = new Command(0x88);
+//
+//		int contextDomain = Constants.CMD_GET_VEHICLE_VARIABLE;
+//
+//		ArrayList<Integer> variableList = new ArrayList<Integer>();
+//		variableList.add(Constants.VAR_SPEED);
+//
+//		Content cnt = new Content(simStartStep,simEndStep,polygon.id,contextDomain,polygon.sensingRadius,variableList);
+//
+//		cmd.setContent(cnt);
+//
+//		//	cmd.print("  --- Command subscribeContexPolygon id: "+polygon.id);
+//
+//		RequestMessage reqMsg = new RequestMessage();
+//
+//		reqMsg.addCommand(cmd);
+//
+//		try {
+//
+//			query(reqMsg);
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	public static void subscribeEdgeVehicles(SumoEdge actionEdge) {
 
@@ -688,7 +664,7 @@ public class SumoCom {
 
 		try {
 
-			ResponseMessage rspMsg = query(reqMsg);
+			query(reqMsg);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -707,14 +683,14 @@ public class SumoCom {
 		return newVehicle;
 	}
 	 */
-	public static Polygon newSumoPolygon(double x, double y, Color color) {
-
-		SumoPolygon newPolygon = new SumoPolygon(x, y, color);
-
-		polygons.add(newPolygon);
-
-		return newPolygon;
-	}
+//	public static Polygon newSumoPolygon(double x, double y, Color color) {
+//
+//		SumoPolygon newPolygon = new SumoPolygon(x, y, color);
+//
+//		polygons.add(newPolygon);
+//
+//		return newPolygon;
+//	}
 
 	public static SumoEdge getEdge(String edgeId) {
 
@@ -833,12 +809,12 @@ public class SumoCom {
 		try {
 
 			ResponseMessage rspMsg = query(reqMsg);
-			/*
+
 			if(rspMsg.status.getResult() != 0)
 				System.out.println("ADD VEHICLE ERROR!");
 			else
 				System.out.println("ADDED VEHICLE!");
-			*/
+
 
 		} catch (IOException e) {
 			System.out.println("Receiving addAllVehicles Status");
@@ -895,35 +871,4 @@ public class SumoCom {
 				return v;
 		return null;
 	}
-
-
-    public synchronized static int getTicks(){
-        int ticks=-1;
-        Command cmd = new Command(Constants.CMD_GET_SIM_VARIABLE);
-        Content cnt = new Content(0x70,"dummy");
-
-        cmd.setContent(cnt);
-
-        //cmd.print("Command GETEDGES");
-
-        RequestMessage reqMsg = new RequestMessage();
-        reqMsg.addCommand(cmd);
-
-
-        try {
-
-            ResponseMessage rspMsg = SumoCom.query(reqMsg);
-            Content content = rspMsg.validate( (byte)  Constants.CMD_GET_SIM_VARIABLE, (byte)  Constants.RESPONSE_GET_SIM_VARIABLE,
-                    (byte)  0x70, (byte)  Constants.TYPE_INTEGER);
-
-            ticks = content.getInteger();
-            return ticks;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (WrongCommand e) {
-            e.printStackTrace();
-        }
-
-        return ticks;
-    }
 }

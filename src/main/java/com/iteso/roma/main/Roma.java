@@ -56,9 +56,6 @@ public class Roma {
 		
 		TimeManager.initialize(new File("romaSimulations/data/romaBasic.settings.xml"));		
 		
-		// Init JADE platform with or without GUI		
-		initJADE();
-		
 		// Start traSMAPI
 		TraSMAPI api = new TraSMAPI(); 
 
@@ -73,7 +70,10 @@ public class Roma {
 		api.connect();
 		api.start();
 		
-		Thread.sleep(1000);
+		// Init JADE platform with or without GUI		
+		initJADE();
+		
+		Thread.sleep(2000);
 
 		while(true)
 			if(!api.simulationStep(0))
@@ -97,14 +97,15 @@ public class Roma {
 	}
 	
 	private static Simulator createSUMO() throws UnimplementedMethod{
-		Simulator sumo = new Sumo("guisim");
+		Simulator sim;
+		sim = new Sumo("guisim");
 		List<String> params = new ArrayList<String>();
 		params.add("-c=romaSimulations\\data\\romaBasic.sumo.cfg");
 		params.add("--device.emissions.probability=1.0");
         params.add("--tripinfo-output=romaSimulations\\data\\trip.xml");
-		sumo.addParameters(params);
-		sumo.addConnections("localhost", 8820);
-		return sumo;
+		sim.addParameters(params);
+		sim.addConnections("localhost", 8820);
+		return sim;
 	}
 	
 	/**

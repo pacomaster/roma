@@ -1,152 +1,172 @@
 package trasmapi.sumo;
 
-import trasmapi.genAPI.Lane;
-import trasmapi.genAPI.exceptions.UnimplementedMethod;
-import trasmapi.genAPI.exceptions.WrongCommand;
-import trasmapi.sumo.protocol.*;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
+import trasmapi.genAPI.Lane;
+import trasmapi.genAPI.exceptions.WrongCommand;
+import trasmapi.sumo.protocol.Command;
+import trasmapi.sumo.protocol.Constants;
+import trasmapi.sumo.protocol.Content;
+import trasmapi.sumo.protocol.RequestMessage;
+import trasmapi.sumo.protocol.ResponseMessage;
+
 public class SumoLane extends Lane {
-
-    float length;
-
-    public SumoLane(String id) {
-        this.id = id;
+	
+	float length;
+	
+	public SumoLane(String id) {
+		this.id = id;
+		loadLength();
+	}
+	
+	public float getLength() {
+        return length;
     }
-
-    /**
-     * method used to retrieve all the lane ids in the loaded network
-     *
-     * @return String[] - a String[] with all the lane ids
-     */
-    public static String[] getLaneIdList() {
-        return null;
-
-    }
-
-    public void setMaxSpeed(float val) {
-
-    }
-
-    /**
-     * returns a list of the vehicles in this lane
-     *
-     * @return the list of vehicles in this lane
-     */
-    public SumoVehicle[] vehiclesList() {
+	
+	public void setMaxSpeed(float val) {
+		
+	}
+	
+	/**
+	 * method used to retrieve all the lane ids in the loaded network
+	 * @return String[] - a String[] with all the lane ids
+	 */
+	public static String[] getLaneIdList() {
+		return null;
+		
+	}
+	
+	public String getEdgeId() {
         Command cmd = new Command(Constants.CMD_GET_LANE_VARIABLE);
-
-        Content cnt = new Content(0x12, id);
+        Content cnt = new Content(Constants.LANE_EDGE_ID, id);
 
         cmd.setContent(cnt);
-        ArrayList<String> idList = new ArrayList<String>();
-
-        //cmd.print("SetMaxSpeed");
-        RequestMessage reqMsg = new RequestMessage();
-        reqMsg.addCommand(cmd);
-
-        try {
-
-            ResponseMessage rspMsg = SumoCom.query(reqMsg);
-            Content content = rspMsg.validate((byte) Constants.CMD_GET_LANE_VARIABLE, (byte) Constants.RESPONSE_GET_LANE_VARIABLE,
-                    (byte) 0x12, (byte) Constants.TYPE_STRINGLIST);
-            //rspMsg.print();
-            idList = content.getStringList();
-            SumoVehicle vehicleList[] = new SumoVehicle[idList.size()];
-
-            for (int i = 0; i < vehicleList.length; i++) {
-                SumoVehicle vehicle = new SumoVehicle(idList.get(i));
-                vehicleList[i] = vehicle;
-            }
-            return vehicleList;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (WrongCommand e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-
-    /**
-     * returns the number of vehicles stopped in this Lane
-     *
-     * @param minVel - threshold velocity to be considered stopped
-     * @return number of stopped vehicles
-     */
-    public int getNumVehiclesStopped(Double minVel) {
-        return 0;
-    }
-
-    /**
-     * returns the number of vehicles in this Lane
-     *
-     * @return number of stopped vehicles
-     */
-    public int getNumVehicles() {
-        return vehiclesList().length;
-        /*int sum = 0;
-		for (int i = 0; i<vl.length; i++)
-			sum++;
-		return sum;*/
-    }
-
-    @Override
-    /**
-     * @param type may have the value nor / eme / bus
-     */
-    public int getNumVehicles(String type) {
-        int sum = 0;
-        SumoVehicle[] vehicles = vehiclesList();
-        for (int i = 0; i < vehicles.length; i++) {
-            try {
-                if (vehicles[i].getTypeId().equals(type)) {
-                    // vehicles[i].focus();
-                    sum++;
-                }
-            }catch (IndexOutOfBoundsException e) {
-            }
-        }
-        return sum;
-    }
-
-    public boolean equals(SumoLane s) {
-        return this.id.equals(s.id);
-    }
-
-    public String toString() {
-        return id;
-    }
-
-    public double getLength() {
-        double len = -1;
-        Command cmd = new Command(Constants.CMD_GET_LANE_VARIABLE);
-
-        Content cnt = new Content(0x44, id);
-
-        cmd.setContent(cnt);
-        ArrayList<String> idList = new ArrayList<String>();
 
         RequestMessage reqMsg = new RequestMessage();
         reqMsg.addCommand(cmd);
 
         try {
             ResponseMessage rspMsg = SumoCom.query(reqMsg);
-            Content content = rspMsg.validate((byte) Constants.CMD_GET_LANE_VARIABLE, (byte) Constants.RESPONSE_GET_LANE_VARIABLE,
-                    (byte) 0x44, (byte) Constants.TYPE_DOUBLE);
-            len = content.getDouble();
-            return len;
+            Content content = rspMsg.validate(
+                    (byte)Constants.CMD_GET_LANE_VARIABLE,
+                    (byte)Constants.RESPONSE_GET_LANE_VARIABLE,
+                    (byte)Constants.LANE_EDGE_ID,
+                    (byte)Constants.TYPE_STRING);
 
+            return content.getString();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (WrongCommand e) {
             e.printStackTrace();
         }
+        return null;
+	}
 
-        return len;
-    }
+	/**
+	 * returns a list of the vehicles in this lane
+	 * @return the list of vehicles in this lane
+	 */
+	public SumoVehicle[] vehiclesList() {
+        Command cmd = new Command(Constants.CMD_GET_LANE_VARIABLE);
+        Content cnt = new Content(Constants.LAST_STEP_VEHICLE_ID_LIST, id);
+
+        cmd.setContent(cnt);
+
+        RequestMessage reqMsg = new RequestMessage();
+        reqMsg.addCommand(cmd);
+
+        try {
+            ResponseMessage rspMsg = SumoCom.query(reqMsg);
+            Content content = rspMsg.validate(
+                    (byte)Constants.CMD_GET_LANE_VARIABLE,
+                    (byte)Constants.RESPONSE_GET_LANE_VARIABLE,
+                    (byte)Constants.LAST_STEP_VEHICLE_ID_LIST,
+                    (byte)Constants.TYPE_STRINGLIST);
+
+            ArrayList<SumoVehicle> vehicles = new ArrayList<SumoVehicle>();
+            for (String vehicleId: content.getStringList()) {
+                vehicles.add(new SumoVehicle(vehicleId));
+            }
+            return vehicles.toArray(new SumoVehicle[vehicles.size()]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WrongCommand e) {
+            e.printStackTrace();
+        }
+        return null;		
+	}
+	
+	/**
+	 * returns the number of vehicles stopped in this Lane
+	 * @param minVel - threshold velocity to be considered stopped
+	 * @return number of stopped vehicles
+	 */
+	public int getNumVehiclesStopped(Double minVel) {
+		return 0;
+	
+	}
+	
+	/**
+	 * returns the number of vehicles in this Lane
+	 * @return number of stopped vehicles
+	 */
+	public int getNumVehicles() {
+        Command cmd = new Command(Constants.CMD_GET_LANE_VARIABLE);
+        Content cnt = new Content(Constants.LAST_STEP_VEHICLE_NUMBER, id);
+
+        cmd.setContent(cnt);
+
+        RequestMessage reqMsg = new RequestMessage();
+        reqMsg.addCommand(cmd);
+
+        try {
+            ResponseMessage rspMsg = SumoCom.query(reqMsg);
+            Content content = rspMsg.validate(
+                    (byte)Constants.CMD_GET_LANE_VARIABLE,
+                    (byte)Constants.RESPONSE_GET_LANE_VARIABLE,
+                    (byte)Constants.LAST_STEP_VEHICLE_NUMBER,
+                    (byte)Constants.TYPE_INTEGER);
+
+            return content.getInteger();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WrongCommand e) {
+            e.printStackTrace();
+        }
+        return -1;
+	}
+	
+	public boolean equals(SumoLane s) {
+		return this.id.equals(s.id);
+	}
+	
+	public String toString() {
+		return id;
+	}
+
+	public void loadLength() {
+        Command cmd = new Command(Constants.CMD_GET_LANE_VARIABLE);
+        Content cnt = new Content(Constants.VAR_LENGTH, id);
+
+        cmd.setContent(cnt);
+
+        RequestMessage reqMsg = new RequestMessage();
+        reqMsg.addCommand(cmd);
+
+        try {
+            ResponseMessage rspMsg = SumoCom.query(reqMsg);
+            Content content = rspMsg.validate(
+                    (byte)Constants.CMD_GET_LANE_VARIABLE,
+                    (byte)Constants.RESPONSE_GET_LANE_VARIABLE,
+                    (byte)Constants.VAR_LENGTH,
+                    (byte)Constants.TYPE_DOUBLE);
+
+            length = (float) content.getDouble();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WrongCommand e) {
+            e.printStackTrace();
+        }
+	}
 }

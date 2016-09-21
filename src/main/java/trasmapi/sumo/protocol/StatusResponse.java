@@ -21,14 +21,10 @@ public class StatusResponse {
 		int stringSize = in.readInt();
 		
 		if(stringSize != 0){
-			
-			for(int j=0; j<stringSize; j++){
-				Byte b = in.readBByte();				
-				if(b != null){
-					char c = (char) b.byteValue();
-					description += c;
-				}
-			}
+
+			for(int j=0; j<stringSize; j++)
+				description += (char) in.readByte();
+
 		}
 	}
 
