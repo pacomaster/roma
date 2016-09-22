@@ -105,4 +105,13 @@ public class JunctionAgent extends Agent{
 	public Phase getNextPhase() {
 		return nextPhase;
 	}
+	
+	public void setNextPhase(Phase nextPhase) {
+		this.nextPhase = nextPhase;
+	}
+
+	public void setCurrentPhase(Phase currentPhase) {
+		this.currentPhase = currentPhase;
+		
+	}
 }

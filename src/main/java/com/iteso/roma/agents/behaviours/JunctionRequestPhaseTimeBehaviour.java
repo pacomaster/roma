@@ -15,60 +15,37 @@ import jade.lang.acl.MessageTemplate;
 public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 	
 	JunctionAgent junctionAgent;
-	Phase nextPhase;
 	private int step = 0;
 	
 	public JunctionRequestPhaseTimeBehaviour(Agent agent){
 		this.junctionAgent = (JunctionAgent)agent;
-		this.nextPhase = junctionAgent.getNextPhase();
 	}
 
-	/**
-	 * Steps:
-	 * <br/>
-	 * 0 - Sends messages requesting phase values and times to next phase in queue.
-	 * <br/>
-	 * 1 - Receives response with phase values and times
-	 */
 	@Override
 	public void action() {
 		switch(step){
 		case 0:					
-			AID receiver = AIDManager.getPhaseAID(junctionAgent.getPhasesList().get(1).getPhaseId() , myAgent);					
+			AID receiver = AIDManager.getPhaseAID(junctionAgent.getPhasesList().get(1).getPhaseId(), junctionAgent);	
+			
 			if(receiver != null){
-				/*
-				 * Sends the request for next phase values and times
-				 * 
-				 * Type: REQUEST
-				 * To: Next phase in queue
-				 * Subject: PHASE_VALUES_TIMES
-				 * Message: Next Phase
-				 */
-				ACLMessage request = ACLMessageFactory.createRequestMsg(receiver, "Next Phase", ConversationIds.PHASE_VALUES_TIMES);
-				myAgent.send(request);
+				requestPhaseInformation(receiver);
 				step++;
-			}					
+			}else{
+				step = 2;
+			}
+			
 			break;
 		case 1:
 			MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
-			ACLMessage msg = myAgent.receive(mt);
-			if (msg != null) {
-				String conversationId = msg.getConversationId();
-				if(conversationId.equals(ConversationIds.PHASE_VALUES_TIMES)){
-					// Convert message Format: GGrr,yyrr#31,4
-					String msgContent = msg.getContent();
-					String msgValues = msgContent.split("#")[0];
-					String msgTimes = msgContent.split("#")[1];
-					nextPhase.setPhaseValues(msgValues.split(","));
-					nextPhase.setPhaseTimes(new int[msgTimes.split(",").length]);
-					int i = 0;
-					for(String s : msgTimes.split(",")){
-						nextPhase.getPhaseTimes()[i] = Integer.parseInt(s);
-						i++;
-					}
-					step++;
-				}
+			ACLMessage msg = junctionAgent.receive(mt);
+			
+			if(msg != null && msg.getConversationId().equals(ConversationIds.PHASE_VALUES_TIMES)){				
+				processMessage(msg);				
+				step++;
+			}else{
+				step = 2;
 			}
+			
 			break;					
 		}
 	}
@@ -76,6 +53,46 @@ public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 	@Override
 	public boolean done() {
 		return step == 2;
+	}
+	
+	private void requestPhaseInformation(AID receiver){
+		/*
+		 * Sends the request for next phase values and times
+		 * 
+		 * Type: REQUEST
+		 * To: Next phase in queue
+		 * Subject: PHASE_VALUES_TIMES
+		 * Message: Next Phase
+		 */
+		ACLMessage request = ACLMessageFactory.createRequestMsg(receiver, "Next Phase", ConversationIds.PHASE_VALUES_TIMES);
+		myAgent.send(request);
+	}
+	
+	private void processMessage(ACLMessage msg){
+		Phase phase = getPhaseFromMessage(msg);
+		junctionAgent.setNextPhase(phase);
+	}
+	
+	private Phase getPhaseFromMessage(ACLMessage msg){
+		
+		// Message Format: GGrr,yyrr#31,4
+		
+		String msgContent = msg.getContent();
+		String msgStates = msgContent.split("#")[0];
+		String msgTimes = msgContent.split("#")[1];
+		
+		String[] states = msgStates.split(",");		
+		int[] times = arrayStringToInt(msgTimes.split(","));
+		
+		return new Phase(times, states);		
+	}
+	
+	private int[] arrayStringToInt(String[] array){
+		int[] retArray = new int[array.length];
+		for(int i = 0; i < array.length; i++){
+			retArray[i] = Integer.parseInt(array[i]);
+		}
+		return retArray;
 	}
 
 }

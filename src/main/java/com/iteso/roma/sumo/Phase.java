@@ -2,10 +2,29 @@ package com.iteso.roma.sumo;
 
 public class Phase {
 	
+	TrafficLightState[] states;
 	private String[] phaseValues;
 	private int[] phaseTimes;
 	private int phaseStep = 0;
 	private int phasePriority = 1;
+	
+	public Phase(TrafficLightState[] cycles){
+		this.states = cycles;
+	}
+	
+	public int nextState(){
+		phaseStep++;
+		if(phaseStep == phaseValues.length) phaseStep = 0;
+		return phaseStep;
+	}
+	
+	public String getCurrentState(){
+		return phaseValues[phaseStep];
+	}
+	
+	public int getCurrentTime(){
+		return phaseTimes[phaseStep];
+	}
 
 	public Phase(int[] phaseTimes, String[] phaseValues) {
 		this.phaseTimes = phaseTimes;

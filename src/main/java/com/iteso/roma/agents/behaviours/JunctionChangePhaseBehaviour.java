@@ -14,15 +14,11 @@ public class JunctionChangePhaseBehaviour extends TickerBehaviour{
 	private static final Logger logger = Logger.getLogger(JunctionChangePhaseBehaviour.class.getName());
 	
 	JunctionAgent junctionAgent;
-	Phase currentPhase;
-	Phase nextPhase;
 	int nextCycle;
 
 	public JunctionChangePhaseBehaviour(Agent agent, long period, int firstCycle) {
 		super(agent, period);
 		this.junctionAgent = (JunctionAgent)agent;
-		this.currentPhase = junctionAgent.getCurrentPhase();
-		this.nextPhase = junctionAgent.getNextPhase();
 		this.nextCycle = firstCycle;
 	}
 
@@ -31,35 +27,34 @@ public class JunctionChangePhaseBehaviour extends TickerBehaviour{
 		int sumoTimeFull = SumoCom.getCurrentSimStep();
 		int sumoTime = sumoTimeFull / 1000;
 		
-		// This ticker changes the current configuration of the traffic light after completes its time
 		if(sumoTime > nextCycle){					
-			changePhase(myAgent);					
-			logger.info(sumoTime + " " + junctionAgent.getJunctionId() + "-" + junctionAgent.getPhasesList().get(0).getPhaseId() + " P: " + currentPhase.getPhaseStep() + " nextCycle: " + currentPhase.getPhaseTimes()[currentPhase.getPhaseStep()]);
+			changeState();
+			logCurrentTrafficLightState(sumoTime);			
 		}
 	}
+
+	public void changeState(){
+		if(junctionAgent.getCurrentPhase().nextState() == 0){
+			changeNextPhase();
+		}else{
+			junctionAgent.addBehaviour(new JunctionRequestPhaseTimeBehaviour(junctionAgent));
+		}
+		junctionAgent.getSumoTrafficLight().setState(junctionAgent.getCurrentPhase().getCurrentState());
+		nextCycle += junctionAgent.getCurrentPhase().getCurrentTime();
+	}
 	
-	/**
-	 * Changes to the next element in the array in the current phase.
-	 * @param myAgent Reference to the current agent
-	 */
-	public void changePhase(Agent myAgent){
-		currentPhase.setPhaseStep(currentPhase.getPhaseStep() + 1);
-		// Check for last phase
-		if(currentPhase.getPhaseStep() == currentPhase.getPhaseTimes().length - 1){
-			// Request next phase
-			myAgent.addBehaviour(new JunctionRequestPhaseTimeBehaviour(this.junctionAgent));
-		}
-		// If this is the last element change to the next phase
-		if(currentPhase.getPhaseStep() == currentPhase.getPhaseTimes().length){
-			currentPhase = nextPhase;
-			currentPhase.setPhaseStep(0);
-			
-			junctionAgent.getPhasesList().add(junctionAgent.getPhasesList().get(0));
-			junctionAgent.getPhasesList().remove(0);
-		}
-		// Changes the phase in SUMO
-		junctionAgent.getSumoTrafficLight().setState(currentPhase.getPhaseValues()[currentPhase.getPhaseStep()]);
-		nextCycle += currentPhase.getPhaseTimes()[currentPhase.getPhaseStep()];
+	private void changeNextPhase(){
+		junctionAgent.setCurrentPhase(junctionAgent.getNextPhase());			
+		junctionAgent.getPhasesList().add(junctionAgent.getPhasesList().get(0));
+		junctionAgent.getPhasesList().remove(0);
+	}
+	
+	private void logCurrentTrafficLightState(int sumoTime) {
+		logger.info(sumoTime + 
+				" " + junctionAgent.getJunctionId() + 
+				"-" + junctionAgent.getPhasesList().get(0).getPhaseId() + 
+				" P: " + junctionAgent.getCurrentPhase().getPhaseStep() + 
+				" nextCycle: " + junctionAgent.getCurrentPhase().getPhaseTimes()[junctionAgent.getCurrentPhase().getPhaseStep()]);
 	}
 
 }
