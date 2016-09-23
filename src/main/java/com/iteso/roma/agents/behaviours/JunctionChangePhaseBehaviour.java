@@ -53,8 +53,7 @@ public class JunctionChangePhaseBehaviour extends TickerBehaviour{
 		logger.info(sumoTime + 
 				" " + junctionAgent.getJunctionId() + 
 				"-" + junctionAgent.getPhasesList().get(0).getPhaseId() + 
-				" P: " + junctionAgent.getCurrentPhase().getPhaseStep() + 
-				" nextCycle: " + junctionAgent.getCurrentPhase().getPhaseTimes()[junctionAgent.getCurrentPhase().getPhaseStep()]);
+				" nextCycle: " + nextCycle);
 	}
 
 }

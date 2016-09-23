@@ -16,6 +16,7 @@ public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 	
 	JunctionAgent junctionAgent;
 	private int step = 0;
+	private final int FINAL_STEP = 2;
 	
 	public JunctionRequestPhaseTimeBehaviour(Agent agent){
 		this.junctionAgent = (JunctionAgent)agent;
@@ -31,7 +32,7 @@ public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 				requestPhaseInformation(receiver);
 				step++;
 			}else{
-				step = 2;
+				step = FINAL_STEP;
 			}
 			
 			break;
@@ -43,7 +44,7 @@ public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 				processMessage(msg);				
 				step++;
 			}else{
-				step = 2;
+				step = FINAL_STEP;
 			}
 			
 			break;					
@@ -52,7 +53,7 @@ public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 
 	@Override
 	public boolean done() {
-		return step == 2;
+		return step == FINAL_STEP;
 	}
 	
 	private void requestPhaseInformation(AID receiver){
@@ -84,7 +85,7 @@ public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 		String[] states = msgStates.split(",");		
 		int[] times = arrayStringToInt(msgTimes.split(","));
 		
-		return new Phase(times, states);		
+		return new Phase(states, times);		
 	}
 	
 	private int[] arrayStringToInt(String[] array){

@@ -62,10 +62,6 @@ public class PhaseAgent extends Agent{
 	
 	private Phase phase;
 	
-	private String[] phaseValues;
-	private int[] phaseTimes;
-	
-	private int phasePriority = 1;
 	private int[] lanesPriorities;
 	
 	TableNegotiationResolver negotiationResolver = new TableNegotiationResolver(OfferTables.tableA, DealTables.tableA);
@@ -77,18 +73,17 @@ public class PhaseAgent extends Agent{
 	 * @param phaseTimes The phases duration
 	 * @param phaseValues The phases values
 	 */
-	public PhaseAgent(String phaseId, String junctionId, int[] phaseTimes, String[] phaseValues) {
+	public PhaseAgent(String phaseId, String junctionId, Phase phase) {
 		this.phaseId = phaseId;
-		this.phaseTimes = phaseTimes;
-		this.phaseValues = phaseValues;
+		this.phase = phase;
 		
 		// A unit is the way  the phase knows how many seconds needs to deal or offer using dealTable and offerTable
-		MIDDLE = phaseTimes[0];
+		MIDDLE = phase.getGreenTime();
 		UNIT = MIDDLE / 5;
 		MAX = MIDDLE + (UNIT*2);
 		
 		// Check  how many lanes are set in green for this phase		
-		lanesPriorities = new int[phaseValues[0].length()];
+		lanesPriorities = new int[phase.getStatesLength()];
 		
 		/* Create an array where 1 is a green space in the phase
 		 * Example:
@@ -99,14 +94,14 @@ public class PhaseAgent extends Agent{
 		 * PHASE VALUE: rrrGrrrrrrrGrrrr
 		 * LANES PRIORITIES: [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]
 		 */		
-		for(int i = 0; i < phaseValues[0].length(); i++) {
-		    if(phaseValues[0].charAt(i) == 'G') {
+		for(int i = 0; i < lanesPriorities.length; i++) {
+		    if(phase.getGreenState().charAt(i) == 'G') {
 		        lanesPriorities[i] = 1;
 		    }else{
 		    	lanesPriorities[i] = 0;
 		    }
 		}
-		phasePriority = calculatePhasePriority();		
+		phase.setPhasePriority(calculatePhasePriority());		
 	}
 	
 	/**
@@ -178,14 +173,14 @@ public class PhaseAgent extends Agent{
 					 */
 					ACLMessage reply = msg.createReply();
 					reply.setPerformative(ACLMessage.INFORM);
-					String msgValues = StringUtils.join(phaseValues,",");
-					String msgTimes = String.valueOf(phaseTimes[0]);
-					for(int i = 1; i < phaseTimes.length; i++){
-						msgTimes += "," + phaseTimes[i];
+					String msgValues = StringUtils.join(phase.getStates(),",");
+					String msgTimes = String.valueOf(phase.getTimes()[0]);
+					for(int i = 1; i < phase.getTimes().length; i++){
+						msgTimes += "," + phase.getTimes()[i];
 					}									
 					reply.setContent(msgValues + "#" + msgTimes);					
 					myAgent.send(reply);
-					phaseTimes[0] =MIDDLE;
+					phase.setGreenTime(MIDDLE);
 				}
 				
 				// Request to change the priority from JunctionAgent				
@@ -225,7 +220,7 @@ public class PhaseAgent extends Agent{
 					
 					if(!negotiationResolver.acceptOffer(getPhaseStatus(), offer)){
 						reply.setPerformative(ACLMessage.REFUSE);
-						phaseTimes[0] += Integer.parseInt(msg.getContent()) * UNIT;
+						phase.setGreenTime(phase.getGreenTime() + Integer.parseInt(msg.getContent())*UNIT);
 						reply.setContent(phaseId);
 						myAgent.send(reply);
 						System.out.println("phaAge: " + phaseId + " Refuses"); // DEBUG
@@ -249,8 +244,8 @@ public class PhaseAgent extends Agent{
 				if(conversationId.equals("stage-accept")){
 					ACLMessage reply = msg.createReply();
 					int timeAccepted = Integer.parseInt(msg.getContent());
-					phaseTimes[0] += timeAccepted * UNIT;
-					if(phaseTimes[0] > MAX) phaseTimes[0] = MAX;
+					phase.setGreenTime(phase.getGreenTime() + timeAccepted*UNIT);
+					if(phase.getGreenTime() > MAX) phase.setGreenTime(MAX);
 					reply.setPerformative(ACLMessage.INFORM);
 					reply.setContent(Integer.toString(timeAccepted));
 					myAgent.send(reply);
@@ -280,8 +275,8 @@ public class PhaseAgent extends Agent{
 		PhaseStatus status = new PhaseStatus();
 		
 		status.idealTime = MIDDLE;
-		status.priority = phasePriority;
-		status.secondsLeft =phaseTimes[0];
+		status.priority = phase.getPhasePriority();
+		status.secondsLeft = phase.getGreenTime();
 		
 		return status;
 	}

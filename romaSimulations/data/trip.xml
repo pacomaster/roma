@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 22/09/2016 06:01:18 p.m. by SUMO gui Version 0.25.0
+<!-- generated on 23/09/2016 12:01:52 p.m. by SUMO gui Version 0.25.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumo-gui.exeConfiguration.xsd">
@@ -43,4 +43,22 @@
 -->
 
 <tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
+    <tripinfo id="veh1" depart="3.00" departLane="E5_0" departPos="6.10" departSpeed="0.00" departDelay="3.00" arrival="42.00" arrivalLane="E2_0" arrivalPos="242.71" arrivalSpeed="13.78" duration="39.00" routeLength="474.52" waitSteps="0" timeLoss="4.26" rerouteNo="0" devices="tripinfo_veh1 emissions_veh1" vType="CarA" vaporized="">
+        <emissions CO_abs="639.783524" CO2_abs="72740.810930" HC_abs="19.352072" PMx_abs="6.784279" NOx_abs="141.769747" fuel_abs="29.000657"/>
+    </tripinfo>
+    <tripinfo id="veh0" depart="0.00" departLane="E5_0" departPos="6.10" departSpeed="0.00" departDelay="0.00" arrival="44.00" arrivalLane="E2_0" arrivalPos="242.71" arrivalSpeed="12.76" duration="44.00" routeLength="474.52" waitSteps="0" timeLoss="9.42" rerouteNo="0" devices="tripinfo_veh0 emissions_veh0" vType="CarA" vaporized="">
+        <emissions CO_abs="1156.743311" CO2_abs="97281.977658" HC_abs="29.300023" PMx_abs="10.551572" NOx_abs="199.545378" fuel_abs="38.784834"/>
+    </tripinfo>
+    <tripinfo id="veh2" depart="6.00" departLane="E5_0" departPos="6.10" departSpeed="0.00" departDelay="6.00" arrival="46.00" arrivalLane="E2_1" arrivalPos="242.71" arrivalSpeed="13.78" duration="40.00" routeLength="474.52" waitSteps="0" timeLoss="4.96" rerouteNo="0" devices="tripinfo_veh2 emissions_veh2" vType="CarA" vaporized="">
+        <emissions CO_abs="669.437800" CO2_abs="78472.188501" HC_abs="20.788260" PMx_abs="7.002953" NOx_abs="151.731776" fuel_abs="31.285670"/>
+    </tripinfo>
+    <tripinfo id="veh3" depart="9.00" departLane="E5_0" departPos="6.10" departSpeed="0.00" departDelay="9.00" arrival="48.00" arrivalLane="E2_0" arrivalPos="242.71" arrivalSpeed="13.02" duration="39.00" routeLength="474.52" waitSteps="0" timeLoss="4.60" rerouteNo="0" devices="tripinfo_veh3 emissions_veh3" vType="CarA" vaporized="">
+        <emissions CO_abs="727.160613" CO2_abs="80571.402917" HC_abs="21.579985" PMx_abs="7.667198" NOx_abs="157.877010" fuel_abs="32.122595"/>
+    </tripinfo>
+    <tripinfo id="veh4" depart="12.00" departLane="E5_0" departPos="6.10" departSpeed="0.00" departDelay="12.00" arrival="51.00" arrivalLane="E2_0" arrivalPos="242.71" arrivalSpeed="13.71" duration="39.00" routeLength="474.52" waitSteps="0" timeLoss="3.95" rerouteNo="0" devices="tripinfo_veh4 emissions_veh4" vType="CarA" vaporized="">
+        <emissions CO_abs="744.134804" CO2_abs="78225.668073" HC_abs="21.275116" PMx_abs="7.606944" NOx_abs="154.758988" fuel_abs="31.187385"/>
+    </tripinfo>
+    <tripinfo id="veh5" depart="15.00" departLane="E5_0" departPos="6.10" departSpeed="0.00" departDelay="15.00" arrival="54.00" arrivalLane="E2_0" arrivalPos="242.71" arrivalSpeed="13.72" duration="39.00" routeLength="474.52" waitSteps="0" timeLoss="4.70" rerouteNo="0" devices="tripinfo_veh5 emissions_veh5" vType="CarA" vaporized="">
+        <emissions CO_abs="728.126313" CO2_abs="76856.576807" HC_abs="21.054861" PMx_abs="7.249503" NOx_abs="151.266694" fuel_abs="30.641548"/>
+    </tripinfo>
 </tripinfos>

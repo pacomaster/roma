@@ -3,6 +3,7 @@ package com.iteso.roma.agents;
 import java.util.ArrayList;
 
 import com.iteso.roma.sumo.Phase;
+import com.iteso.roma.sumo.TrafficLightState;
 import com.iteso.roma.utils.TimeManager;
 
 import jade.core.Agent;
@@ -30,27 +31,40 @@ public class RomaManagerAgent extends Agent{
 	
 	protected void setup() {
 		
-		int[] pTimes1 = {15,4}; // 31,4
-		String[] pValues1 = {"GGGrrrrrGGGrrrrr", "yyyrrrrryyyrrrrr"};	
-		PhaseAgent phaseAgent1 = new PhaseAgent("pha1","J5",pTimes1,pValues1);
+		TrafficLightState t10 = new TrafficLightState("GGGrrrrrGGGrrrrr", 15);
+		TrafficLightState t11 = new TrafficLightState("yyyrrrrryyyrrrrr", 4);
 		
-		int[] pTimes2 = {6,4}; // 6,4
-		String[] pValues2 = {"rrrGrrrrrrrGrrrr", "rrryrrrrrrryrrrr"};	
-		PhaseAgent phaseAgent2 = new PhaseAgent("pha2","J5",pTimes2,pValues2);
+		TrafficLightState t20 = new TrafficLightState("rrrGrrrrrrrGrrrr", 6);
+		TrafficLightState t21 = new TrafficLightState("rrryrrrrrrryrrrr", 4);
 		
-		int[] pTimes3 = {15,4}; // 31,4
-		String[] pValues3 = {"rrrrGGGrrrrrGGGr", "rrrryyyrrrrryyyr"};	
-		PhaseAgent phaseAgent3 = new PhaseAgent("pha3","J5",pTimes3,pValues3);
+		TrafficLightState t30 = new TrafficLightState("rrrrGGGrrrrrGGGr", 15);
+		TrafficLightState t31 = new TrafficLightState("rrrryyyrrrrryyyr", 4);
 		
-		int[] pTimes4 = {6,4}; // 6,4
-		String[] pValues4 = {"rrrrrrrGrrrrrrrG", "rrrrrrryrrrrrrry"};	
-		PhaseAgent phaseAgent4 = new PhaseAgent("pha4","J5",pTimes4,pValues4);
+		TrafficLightState t40 = new TrafficLightState("rrrrrrrGrrrrrrrG", 6);
+		TrafficLightState t41 = new TrafficLightState("rrrrrrryrrrrrrry", 4);
+		
+		TrafficLightState[] t1 = {t10, t11};
+		TrafficLightState[] t2 = {t20, t21};
+		TrafficLightState[] t3 = {t30, t31};
+		TrafficLightState[] t4 = {t40, t41};
+		
+		Phase pha1 = new Phase(t1);
+		Phase pha2 = new Phase(t2);
+		Phase pha3 = new Phase(t3);
+		Phase pha4 = new Phase(t4);
+		
+		PhaseAgent phaseAgent1 = new PhaseAgent("pha1","J5",pha1);	
+		PhaseAgent phaseAgent2 = new PhaseAgent("pha2","J5",pha2);
+		PhaseAgent phaseAgent3 = new PhaseAgent("pha3","J5",pha3);	
+		PhaseAgent phaseAgent4 = new PhaseAgent("pha4","J5",pha4);
 		
 		ArrayList<PhaseAgent> phasesList = new ArrayList<PhaseAgent>();
 		phasesList.add(phaseAgent1);
 		phasesList.add(phaseAgent2);
 		phasesList.add(phaseAgent3);
 		phasesList.add(phaseAgent4);
+		
+		JunctionAgent junctonAgent5 = new JunctionAgent("J5", phasesList, pha1);
 		
 		LaneAgent laneAgent10 = new LaneAgent("E1_0","J5");
 		LaneAgent laneAgent11 = new LaneAgent("E1_1","J5");
@@ -63,12 +77,6 @@ public class RomaManagerAgent extends Agent{
 	
 		LaneAgent laneAgent70 = new LaneAgent("E7_0","J5");
 		LaneAgent laneAgent71 = new LaneAgent("E7_1","J5");
-		
-		Phase firstPhase = new Phase(pTimes1, pValues1);
-		Phase nextPhase = new Phase(pTimes2, pValues2);
-		
-		JunctionAgent junctonAgent5 = new JunctionAgent("J5", phasesList, firstPhase, nextPhase);
-		
 		
 		try {			
 			mainContainer.acceptNewAgent("pha1", phaseAgent1).start();
@@ -89,17 +97,6 @@ public class RomaManagerAgent extends Agent{
 		} catch (StaleProxyException e) {
 			e.printStackTrace();
 		}
-		
-		addBehaviour(new TickerBehaviour(this, TimeManager.getSeconds(1)) {
-			protected void onTick() {
-				int sumoTimeFull = SumoCom.getCurrentSimStep();
-				int sumoTime = sumoTimeFull / 1000;
-				
-				if(sumoTime > nextCycle){
-					
-				}
-			}
-		});
 		
 	}
 	

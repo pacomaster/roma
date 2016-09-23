@@ -3,8 +3,6 @@ package com.iteso.roma.sumo;
 public class Phase {
 	
 	TrafficLightState[] states;
-	private String[] phaseValues;
-	private int[] phaseTimes;
 	private int phaseStep = 0;
 	private int phasePriority = 1;
 	
@@ -12,51 +10,41 @@ public class Phase {
 		this.states = cycles;
 	}
 	
+	public Phase(String[] states, int[] times) {
+		this.states = new TrafficLightState[times.length];
+		for(int i = 0; i < times.length; i++){
+			this.states[i] = new TrafficLightState(states[i], times[i]);
+		}
+	}
+	
 	public int nextState(){
 		phaseStep++;
-		if(phaseStep == phaseValues.length) phaseStep = 0;
+		if(phaseStep == states.length) phaseStep = 0;
 		return phaseStep;
 	}
 	
 	public String getCurrentState(){
-		return phaseValues[phaseStep];
+		return states[phaseStep].getState();
 	}
 	
 	public int getCurrentTime(){
-		return phaseTimes[phaseStep];
+		return states[phaseStep].getTime();
 	}
 
-	public Phase(int[] phaseTimes, String[] phaseValues) {
-		this.phaseTimes = phaseTimes;
-		this.phaseValues = phaseValues;
+	public int getGreenTime(){
+		return states[0].getTime();
 	}
 	
-	public String[] getPhaseValues() {
-		return phaseValues;
+	public void setGreenTime(int time){
+		states[0].setTime(time);
 	}
 	
-	public void setPhaseValues(String[] phaseValues) {
-		this.phaseValues = phaseValues;
+	public String getGreenState(){
+		return states[0].getState();
 	}
 	
-	public void setPhaseTimes(int[] phaseTimes) {
-		this.phaseTimes = phaseTimes;
-	}
-
-	public int[] getPhaseTimes() {
-		return phaseTimes;
-	}
-	
-	public int getGreenTime() {
-		return phaseTimes[0];
-	}
-	
-	public void setPhaseStep(int phaseStep) {
-		this.phaseStep = phaseStep;
-	}
-
-	public int getPhaseStep() {
-		return phaseStep;
+	public int getStatesLength(){
+		return states.length;
 	}
 	
 	public int getPhasePriority() {
@@ -65,6 +53,22 @@ public class Phase {
 
 	public void setPhasePriority(int phasePriority) {
 		this.phasePriority = phasePriority;
+	}
+	
+	public String[] getStates(){
+		String[] states = new String[this.states.length];
+		for(int i = 0; i < this.states.length; i++){
+			states[i] = this.states[i].getState();
+		}
+		return states;
+	}
+	
+	public int[] getTimes(){
+		int[] times = new int[this.states.length];
+		for(int i = 0; i < this.states.length; i++){
+			times[i] = this.states[i].getTime();
+		}
+		return times;
 	}
 
 }
