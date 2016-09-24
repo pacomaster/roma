@@ -1,7 +1,5 @@
 package com.iteso.roma.agents;
 
-import java.util.logging.Logger;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.iteso.roma.jade.ConversationIds;
