@@ -2,14 +2,14 @@
 Loading net-file from 'romaSimulations\data\romaBasic.net.xml'...  done (2ms).
 Loading done.
 Simulation started with time: 0.00
-Error: send failed: Socket reset by peer
+Error: tcpip::Socket::recvAndCheck @ recv: Socket reset by peer
 Quitting (on error).
 Performance: 
- Duration: 32974ms
- Real time factor: 2.06223
- UPS: 20.531328
+ Duration: 37916ms
+ Real time factor: 4.06161
+ UPS: 70.234202
 Vehicles: 
- Inserted: 23 (Loaded: 151)
- Running: 17
- Waiting: 40
+ Inserted: 51 (Loaded: 151)
+ Running: 31
+ Waiting: 42
 

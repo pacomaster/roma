@@ -57,7 +57,7 @@ public class Roma {
 		TimeManager.initialize(new File("romaSimulations/data/romaBasic.settings.xml"));		
 		
 		// Start traSMAPI
-		TraSMAPI api = new TraSMAPI(); 
+		TraSMAPI api = new TraSMAPI();
 
 		//Create SUMO
 		Simulator sumo = createSUMO();
@@ -92,7 +92,7 @@ public class Roma {
 
 		Runtime runtimeInstance = Runtime.instance();		
 		_mainContainer = runtimeInstance.createMainContainer(_profile);		
-		RomaManagerAgent romaManager = new RomaManagerAgent(1, _mainContainer);		
+		RomaManagerAgent romaManager = new RomaManagerAgent(_mainContainer);		
 		_mainContainer.acceptNewAgent("_Roma_", romaManager).start();
 	}
 	

@@ -14,6 +14,7 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import trasmapi.sumo.SumoCom;
 
+@SuppressWarnings("serial")
 public class LaneVehiclesCheckerBehaviour extends TickerBehaviour{
 	
 	private static final Logger logger = Logger.getLogger(LaneVehiclesCheckerBehaviour.class.getName());
@@ -61,21 +62,11 @@ public class LaneVehiclesCheckerBehaviour extends TickerBehaviour{
 	}
 	
 	private void sendChangePriorityMessage(){
-		
-		/*
-		 * Sends message to Junction for priority
-		 * 
-		 * Type: REQUEST
-		 * To: Affected junction
-		 * Subject: lane-change-priority
-		 * Message: [laneId],[priority]
-		 */
-		
-		AID receiverJunction = AIDManager.getJunctionAID(laneAgent.getJunctionId(), myAgent);
+		AID receiverJunction = AIDManager.getJunctionAID(laneAgent.getJunctionId(), laneAgent);
 		String messageContent = laneAgent.getLaneId() + "," + laneAgent.getCurrentPriority();
 		
 		ACLMessage request = ACLMessageFactory.createRequestMsg(receiverJunction, messageContent, ConversationIds.LANE_CHANGE_PRIORITY);
-		myAgent.send(request);
+		laneAgent.send(request);
 	}
 
 }

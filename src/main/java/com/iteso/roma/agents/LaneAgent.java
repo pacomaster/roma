@@ -12,6 +12,7 @@ import trasmapi.sumo.SumoLane;
  * @author Francisco Amezcua
  *
  */
+@SuppressWarnings("serial")
 public class LaneAgent extends Agent{
 	
 	SumoLane myself;

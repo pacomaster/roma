@@ -12,6 +12,7 @@ import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
+@SuppressWarnings("serial")
 public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 	
 	JunctionAgent junctionAgent;
@@ -26,7 +27,7 @@ public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 	public void action() {
 		switch(step){
 		case 0:					
-			AID receiver = AIDManager.getPhaseAID(junctionAgent.getPhasesList().get(1).getPhaseId(), junctionAgent);	
+			AID receiver = AIDManager.getPhaseAID(junctionAgent.getPhaseAgentsList().get(1).getPhaseId(), junctionAgent);	
 			
 			if(receiver != null){
 				requestPhaseInformation(receiver);

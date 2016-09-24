@@ -5,22 +5,16 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 
 import com.iteso.roma.jade.ConversationIds;
+import com.iteso.roma.jade.ServiceRegister;
 import com.iteso.roma.negotiation.DealTables;
 import com.iteso.roma.negotiation.Offer;
 import com.iteso.roma.negotiation.OfferTables;
 import com.iteso.roma.negotiation.PhaseStatus;
 import com.iteso.roma.negotiation.TableNegotiationResolver;
 import com.iteso.roma.sumo.Phase;
-import com.iteso.roma.utils.ACLMessageFactory;
-import com.iteso.roma.utils.AIDManager;
 
 import jade.core.Agent;
-import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.domain.DFService;
-import jade.domain.FIPAException;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
@@ -50,9 +44,8 @@ import jade.lang.acl.MessageTemplate;
  * @author Francisco Amezcua
  *
  */
+@SuppressWarnings("serial")
 public class PhaseAgent extends Agent{
-	
-	private static final Logger logger = Logger.getLogger(JunctionAgent.class.getName());
 	
 	private final int MIDDLE;
 	private final int MAX;
@@ -126,21 +119,8 @@ public class PhaseAgent extends Agent{
 	/**
 	 * This class setups the agent
 	 */
-	protected void setup(){
-		// Register the phase service in the yellow pages
-		DFAgentDescription dfd = new DFAgentDescription();
-		dfd.setName(getAID());
-		ServiceDescription sd = new ServiceDescription();
-		sd.setType(phaseId);
-		sd.setName(phaseId);
-		dfd.addServices(sd);
-		try {
-			DFService.register(this, dfd);
-		}
-		catch (FIPAException fe) {
-			fe.printStackTrace();
-		}
-		
+	protected void setup(){		
+		ServiceRegister.register(this, phaseId);		
 		addBehaviour(new RequestMessage());
 		addBehaviour(new CoordinationCFP());
 		

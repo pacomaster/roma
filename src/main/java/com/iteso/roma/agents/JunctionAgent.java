@@ -1,7 +1,6 @@
 package com.iteso.roma.agents;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import com.iteso.roma.agents.behaviours.JunctionChangePhaseBehaviour;
 import com.iteso.roma.agents.behaviours.JunctionRequestMessageBehaviour;
@@ -45,9 +44,8 @@ import trasmapi.sumo.SumoTrafficLight;
  * @author Francisco Amezcua
  *
  */
+@SuppressWarnings("serial")
 public class JunctionAgent extends Agent{
-	
-	private static final Logger logger = Logger.getLogger(JunctionAgent.class.getName());
 	
 	private String junctionId;
 	private SumoTrafficLight myself;
@@ -59,7 +57,7 @@ public class JunctionAgent extends Agent{
 	 * This list contains the next phase to put into the traffic light
 	 * Remember phase consist of Green and yellow lights
 	 */
-	private ArrayList<PhaseAgent> phasesList = new ArrayList<PhaseAgent>();
+	private ArrayList<PhaseAgent> phaseAgentsList = new ArrayList<PhaseAgent>();
 	
 	/**
 	 * Constructor
@@ -73,7 +71,7 @@ public class JunctionAgent extends Agent{
 		this.myself = new SumoTrafficLight(junctionId);
 		this.currentPhase = firstPhase;
 		this.nextPhase = currentPhase;
-		this.phasesList = phasesList;
+		this.phaseAgentsList = phasesList;
 		firstCycle = this.currentPhase.getGreenTime();
 	}
 	
@@ -94,8 +92,8 @@ public class JunctionAgent extends Agent{
 		return myself;
 	}
 	
-	public ArrayList<PhaseAgent> getPhasesList() {
-		return phasesList;
+	public ArrayList<PhaseAgent> getPhaseAgentsList() {
+		return phaseAgentsList;
 	}
 	
 	public Phase getCurrentPhase() {

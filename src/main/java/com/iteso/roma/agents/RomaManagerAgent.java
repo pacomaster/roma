@@ -4,28 +4,24 @@ import java.util.ArrayList;
 
 import com.iteso.roma.sumo.Phase;
 import com.iteso.roma.sumo.TrafficLightState;
-import com.iteso.roma.utils.TimeManager;
 
 import jade.core.Agent;
-import jade.core.behaviours.TickerBehaviour;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-import trasmapi.sumo.SumoCom;
 
 /**
  * Class to manage the creation of agents
  * @author Francisco Amezcua
  *
  */
+@SuppressWarnings("serial")
 public class RomaManagerAgent extends Agent{
 	
 	int nextCycle = 31;
 	
 	private ContainerController mainContainer;
-	private int romaManagerId;
 	
-	public RomaManagerAgent(int romaManagerId, ContainerController mainContainer) {
-		this.romaManagerId = romaManagerId;
+	public RomaManagerAgent(ContainerController mainContainer) {
 		this.mainContainer = mainContainer;
 	}
 	
