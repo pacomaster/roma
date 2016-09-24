@@ -15,6 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import com.iteso.roma.agents.JunctionManagerAgent;
 import com.iteso.roma.agents.RomaManagerAgent;
 import com.iteso.roma.utils.TimeManager;
 
@@ -39,8 +40,10 @@ public class Roma {
 	private static final Logger LOGGER = Logger.getLogger(Roma.class.getName());
 	
 	static boolean JADE_GUI = true;
-	private static ProfileImpl _profile;
+	private static ProfileImpl _profileMainContainer;
+	private static ProfileImpl _profileJunctionContainer;
 	private static ContainerController _mainContainer;
+	private static ContainerController _junctionContainer;
 
 	public static void main(String[] args) throws 
 			UnimplementedMethod, 
@@ -82,20 +85,43 @@ public class Roma {
 	}
 	
 	private static void initJADE() throws StaleProxyException{
+		initMainContainer();		
+		initJunctionContainer();
+	}
+	
+	private static void initMainContainer() throws StaleProxyException {
 		if(JADE_GUI){
 			List<String> params = new ArrayList<String>();
-			params.add("-gui");			
-			_profile = new BootProfileImpl(params.toArray(new String[0]));
+			params.add("-gui");
+			_profileMainContainer = new BootProfileImpl(params.toArray(new String[0]));
 		} else {
-			_profile = new ProfileImpl();
+			_profileMainContainer = new ProfileImpl();
 		}
 
 		Runtime runtimeInstance = Runtime.instance();		
-		_mainContainer = runtimeInstance.createMainContainer(_profile);		
+		_mainContainer = runtimeInstance.createMainContainer(_profileMainContainer);		
 		RomaManagerAgent romaManager = new RomaManagerAgent(_mainContainer);		
 		_mainContainer.acceptNewAgent("_Roma_", romaManager).start();
 	}
 	
+	private static void initJunctionContainer() throws StaleProxyException {
+		if(JADE_GUI){
+			List<String> params = new ArrayList<String>();
+			params.add("-gui");
+			params.add("-container");
+			params.add("-host localhost");
+			params.add("-port 1099");
+			_profileJunctionContainer = new BootProfileImpl(params.toArray(new String[3]));
+		} else {
+			_profileJunctionContainer = new ProfileImpl();
+		}
+		
+		Runtime runtimeInstance = Runtime.instance();		
+		_junctionContainer = runtimeInstance.createMainContainer(_profileJunctionContainer);		
+		JunctionManagerAgent junctionManager = new JunctionManagerAgent(_junctionContainer);		
+		_junctionContainer.acceptNewAgent("_Junction_", junctionManager).start();
+	}
+
 	private static Simulator createSUMO() throws UnimplementedMethod{
 		Simulator sim;
 		sim = new Sumo("guisim");
