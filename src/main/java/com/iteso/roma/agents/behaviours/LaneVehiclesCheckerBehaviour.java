@@ -48,6 +48,7 @@ public class LaneVehiclesCheckerBehaviour extends TickerBehaviour{
 			laneAgent.setCurrentPriority(priority);			
 			sendChangePriorityMessage();			
 			logger.fine(ConversationIds.LANE_CHANGE_PRIORITY + ": " + laneAgent.getLaneId() + "," + laneAgent.getCurrentPriority());
+			System.out.println(ConversationIds.LANE_CHANGE_PRIORITY + ": " + laneAgent.getLaneId() + "," + laneAgent.getCurrentPriority());
 		}
 	}
 
