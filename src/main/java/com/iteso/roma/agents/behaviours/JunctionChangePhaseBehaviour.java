@@ -27,7 +27,7 @@ public class JunctionChangePhaseBehaviour extends TickerBehaviour{
 		int sumoTimeFull = SumoCom.getCurrentSimStep();
 		int sumoTime = sumoTimeFull / 1000;
 		
-		if(sumoTime > nextCycle){					
+		if(sumoTime > nextCycle){
 			changeState();
 			logCurrentTrafficLightState(sumoTime);			
 		}
@@ -44,9 +44,15 @@ public class JunctionChangePhaseBehaviour extends TickerBehaviour{
 	}
 	
 	private void changeNextPhase(){
+		System.out.print("OLD - ");
+		logCurrentTrafficLightState(0);
+		
 		junctionAgent.setCurrentPhase(junctionAgent.getNextPhase());			
 		junctionAgent.getPhaseAgentsList().add(junctionAgent.getPhaseAgentsList().get(0));
 		junctionAgent.getPhaseAgentsList().remove(0);
+		
+		System.out.print("NEW - ");
+		logCurrentTrafficLightState(0);
 	}
 	
 	private void logCurrentTrafficLightState(int sumoTime) {

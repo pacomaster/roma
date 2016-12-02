@@ -80,8 +80,8 @@ public class JunctionAgent extends Agent{
 	 */
 	protected void setup(){		
 		ServiceRegister.register(this, junctionId);		
-		addBehaviour(new JunctionChangePhaseBehaviour(this, TimeManager.getSeconds(1), firstCycle));		
-		addBehaviour(new JunctionRequestMessageBehaviour(this));
+		//addBehaviour(new JunctionChangePhaseBehaviour(this, TimeManager.getSeconds(1), firstCycle));		
+		//addBehaviour(new JunctionRequestMessageBehaviour(this));
 	}
 	
 	public String getJunctionId() {
