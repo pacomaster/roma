@@ -86,7 +86,7 @@ public class Roma {
 	
 	private static void initJADE() throws StaleProxyException{
 		initMainContainer();		
-		initJunctionContainer();
+		//initJunctionContainer();
 	}
 	
 	private static void initMainContainer() throws StaleProxyException {

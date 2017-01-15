@@ -17,7 +17,7 @@ public class XMLReader {
 
 	public static void main(String[] args) {
 		try {
-			File fXmlFile = new File("C:\\Users\\famezcua\\PROJECTS\\Master ITESO\\sumo-0.25.0\\bin\\data\\trip.xml");
+			File fXmlFile = new File("C:\\Users\\Francisco\\git\\roma\\romaSimulations\\data\\trip.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(fXmlFile);
@@ -31,7 +31,7 @@ public class XMLReader {
 			BufferedWriter bw = null;
 		    PrintWriter writer = null;
 			try{
-				fw = new FileWriter(new File("C:\\Users\\famezcua\\PROJECTS\\Master ITESO\\sumo-0.25.0\\bin\\data\\trip.csv"), true);
+				fw = new FileWriter(new File("C:\\Users\\Francisco\\git\\roma\\romaSimulations\\data\\trip.csv"), true);
 				bw = new BufferedWriter(fw);
 	    	    writer = new PrintWriter(bw);
 	    	    

@@ -63,10 +63,10 @@ public class PhaseRequestMessageBehaviour extends CyclicBehaviour {
 				ACLMessage reply = msg.createReply();
 				reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 				reply.setContent(phaseAgent.getPhaseId());
-				//myAgent.send(reply);
+				myAgent.send(reply);
 				
 				// Start coordination with change priority
-				//myAgent.addBehaviour(new Coordination(msg.getContent()));
+				myAgent.addBehaviour(new PhaseCoordinationBehaviour(myAgent));
 			}
 		}			
 	}
