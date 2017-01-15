@@ -1,6 +1,7 @@
 package com.iteso.roma.agents;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.iteso.roma.agents.behaviours.JunctionChangePhaseBehaviour;
 import com.iteso.roma.agents.behaviours.JunctionRequestMessageBehaviour;
@@ -52,12 +53,13 @@ public class JunctionAgent extends Agent{
 	private Phase currentPhase;
 	private Phase nextPhase;
 	private int firstCycle;
+	private boolean isFixed = true;
 
 	/**
 	 * This list contains the next phase to put into the traffic light
 	 * Remember phase consist of Green and yellow lights
 	 */
-	private ArrayList<PhaseAgent> phaseAgentsList = new ArrayList<PhaseAgent>();
+	private List<PhaseAgent> phaseAgentsList = new ArrayList<PhaseAgent>();
 	
 	/**
 	 * Constructor
@@ -92,7 +94,7 @@ public class JunctionAgent extends Agent{
 		return myself;
 	}
 	
-	public ArrayList<PhaseAgent> getPhaseAgentsList() {
+	public List<PhaseAgent> getPhaseAgentsList() {
 		return phaseAgentsList;
 	}
 	
@@ -110,6 +112,9 @@ public class JunctionAgent extends Agent{
 
 	public void setCurrentPhase(Phase currentPhase) {
 		this.currentPhase = currentPhase;
-		
+	}
+	
+	public boolean isFixed() {
+		return isFixed;
 	}
 }

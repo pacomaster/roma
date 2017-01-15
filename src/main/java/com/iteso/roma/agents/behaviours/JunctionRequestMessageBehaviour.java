@@ -1,6 +1,7 @@
 package com.iteso.roma.agents.behaviours;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.iteso.roma.agents.JunctionAgent;
@@ -31,7 +32,7 @@ public class JunctionRequestMessageBehaviour extends CyclicBehaviour{
 		MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage msg = junctionAgent.receive(mt);
 		if (msg != null) {			
-			if(msg.getConversationId().equals(ConversationIds.LANE_CHANGE_PRIORITY)){
+			if(msg.getConversationId().equals(ConversationIds.LANE_CHANGE_NUM_VEH)){
 				laneChangedPriority(msg);
 			}
 			if(msg.getConversationId().equals(ConversationIds.PHASE_UP_QUEUE)){
@@ -64,7 +65,7 @@ public class JunctionRequestMessageBehaviour extends CyclicBehaviour{
 	}
 	
 	private String getCurrentPhasesOrderInJunction() {
-		ArrayList<PhaseAgent> phaseAgentsList = junctionAgent.getPhaseAgentsList();
+		List<PhaseAgent> phaseAgentsList = junctionAgent.getPhaseAgentsList();
 		
 		String phasesOrder = phaseAgentsList.get(0).getPhaseId();
 		for(int i = 1; i < phaseAgentsList.size(); i++){
@@ -79,7 +80,7 @@ public class JunctionRequestMessageBehaviour extends CyclicBehaviour{
 		for(PhaseAgent phase:junctionAgent.getPhaseAgentsList()){			
 			AID receiverPhase = AIDManager.getPhaseAID(phase.getPhaseId(), junctionAgent);
 			
-			ACLMessage request = ACLMessageFactory.createRequestMsg(receiverPhase, messageContent, ConversationIds.LANE_CHANGE_PRIORITY);
+			ACLMessage request = ACLMessageFactory.createRequestMsg(receiverPhase, messageContent, ConversationIds.LANE_CHANGE_NUM_VEH);
 			junctionAgent.send(request);
 		}
 	}

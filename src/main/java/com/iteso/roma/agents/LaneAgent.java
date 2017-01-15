@@ -19,7 +19,8 @@ public class LaneAgent extends Agent{
 	String laneId;	
 	String junctionId;	
 	int currentPriority = 1;
-	int startCycle = 60;
+	int numberVehicles = 0;
+	public static int cycleTimer = 60;
 	
 	/**
 	 * Constructor
@@ -37,7 +38,7 @@ public class LaneAgent extends Agent{
 	 */
 	protected void setup(){
 		ServiceRegister.register(this, laneId);
-		addBehaviour(new LaneVehiclesCheckerBehaviour(this, TimeManager.getSeconds(1), startCycle));
+		addBehaviour(new LaneVehiclesCheckerBehaviour(this, TimeManager.getSeconds(1), cycleTimer));
 	}
 	
 	public SumoLane getSumoLane(){
@@ -51,13 +52,13 @@ public class LaneAgent extends Agent{
 	public String getJunctionId() {
 		return junctionId;
 	}
-
-	public void setCurrentPriority(int currentPriority) {
-		this.currentPriority = currentPriority;
+	
+	public void setNumberVehicles(int numberVehicles){
+		this.numberVehicles = numberVehicles;
 	}
 	
-	public int getCurrentPriority() {
-		return currentPriority;
+	public int getNumberVehicles(){
+		return numberVehicles;
 	}
 
 }

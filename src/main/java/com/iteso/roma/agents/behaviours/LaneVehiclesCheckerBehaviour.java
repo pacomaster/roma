@@ -35,38 +35,30 @@ public class LaneVehiclesCheckerBehaviour extends TickerBehaviour{
 		
 		// Every 60 seconds in the simulation should check how many cars are in the lane and change the priority
 		if(sumoTime > nextCycle){
-			nextCycle += 60;			
+			nextCycle += LaneAgent.cycleTimer;
 			checkCarsInLane();
 		}
 	}
 	
 	private void checkCarsInLane(){
-		VehicleAttributes vehAttributes = new VehicleAttributes();
-		int priority = calculateLanePriority(laneAgent, vehAttributes);
-		
-		if(laneAgent.getCurrentPriority() != priority){
-			laneAgent.setCurrentPriority(priority);			
-			sendChangePriorityMessage();			
-			logger.fine(ConversationIds.LANE_CHANGE_PRIORITY + ": " + laneAgent.getLaneId() + "," + laneAgent.getCurrentPriority());
-			System.out.println(ConversationIds.LANE_CHANGE_PRIORITY + ": " + laneAgent.getLaneId() + "," + laneAgent.getCurrentPriority());
-		}
+		int numVeh = calculateLaneVehicles(laneAgent);
+		laneAgent.setNumberVehicles(numVeh);			
+		sendNumberVehiclesInLane();			
+//		logger.fine(ConversationIds.LANE_CHANGE_NUM_VEH + ": " + laneAgent.getLaneId() + "," + laneAgent.getNumberVehicles());
+//		System.out.println(ConversationIds.LANE_CHANGE_NUM_VEH + ": " + laneAgent.getLaneId() + "," + laneAgent.getNumberVehicles());
 	}
 
-	private int calculateLanePriority(LaneAgent laneAgent, VehicleAttributes vehicleAttributes) {
+	private int calculateLaneVehicles(LaneAgent laneAgent) {
 		
 		int numVeh = laneAgent.getSumoLane().getNumVehicles();
-		double laneLength = laneAgent.getSumoLane().getLength();
-		double avgVehLength = vehicleAttributes.getAvgVehLength();
-		double minGap = vehicleAttributes.getMinGap();
-		
-		return (int) (((avgVehLength*numVeh + minGap*numVeh)/laneLength)*5.0) + 1;
+		return numVeh;
 	}
 	
-	private void sendChangePriorityMessage(){
+	private void sendNumberVehiclesInLane(){
 		AID receiverJunction = AIDManager.getJunctionAID(laneAgent.getJunctionId(), laneAgent);
-		String messageContent = laneAgent.getLaneId() + "," + laneAgent.getCurrentPriority();
+		String messageContent = laneAgent.getLaneId() + "," + laneAgent.getNumberVehicles();
 		
-		ACLMessage request = ACLMessageFactory.createRequestMsg(receiverJunction, messageContent, ConversationIds.LANE_CHANGE_PRIORITY);
+		ACLMessage request = ACLMessageFactory.createRequestMsg(receiverJunction, messageContent, ConversationIds.LANE_CHANGE_NUM_VEH);
 		laneAgent.send(request);
 	}
 

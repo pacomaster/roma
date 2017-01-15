@@ -51,7 +51,7 @@ public class PhaseRequestMessageBehaviour extends CyclicBehaviour {
 			}
 			
 			// Request to change the priority from JunctionAgent				
-			if(conversationId.equals(ConversationIds.LANE_CHANGE_PRIORITY)){
+			if(conversationId.equals(ConversationIds.LANE_CHANGE_NUM_VEH)){
 				/*
 				 * Notify junction that accepts to change the priority and starts coordination
 				 * 
