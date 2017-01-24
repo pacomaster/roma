@@ -1,7 +1,5 @@
 package com.iteso.roma.agents.behaviours;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import com.iteso.roma.agents.JunctionAgent;
@@ -33,7 +31,7 @@ public class JunctionRequestMessageBehaviour extends CyclicBehaviour{
 		ACLMessage msg = junctionAgent.receive(mt);
 		if (msg != null) {			
 			if(msg.getConversationId().equals(ConversationIds.LANE_CHANGE_NUM_VEH)){
-				laneChangedPriority(msg);
+				laneChangedNumVeh(msg);
 			}
 			if(msg.getConversationId().equals(ConversationIds.PHASE_UP_QUEUE)){
 				phaseRequestedUpInQueue(msg);
@@ -42,40 +40,17 @@ public class JunctionRequestMessageBehaviour extends CyclicBehaviour{
 		block();
 	}
 	
-	private void laneChangedPriority(ACLMessage msg) {		
-		// Message Format: laneId,priority	
+	private void laneChangedNumVeh(ACLMessage msg) {		
+		// Message Format: laneId,numVeh	
 		String content = msg.getContent();
 		String laneId = content.split(",")[0];
-		int priority = Integer.parseInt(content.split(",")[1]);
+		int numVeh = Integer.parseInt(content.split(",")[1]);
 		
-		String lanesAffected = getLanesAffectedInJunction(laneId);
-		String phasesOrder = getCurrentPhasesOrderInJunction();
-		sendLaneChangedPriorityMessage(lanesAffected, phasesOrder, priority);
-	}
-
-	private String getLanesAffectedInJunction(String laneId) {
-		ArrayList<String> laneNames = junctionAgent.getSumoTrafficLight().getControlledLanes();
-		
-		String lanesAffected = String.valueOf(laneNames.get(0).equals(laneId) ? 1 : 0);
-		for (int i = 1; i < laneNames.size(); i++) {
-			lanesAffected += "," + (laneNames.get(i).equals(laneId) ? 1 : 0);
-		}
-		
-		return lanesAffected;
+		sendLaneChangedNumVehMessage(laneId, numVeh);
 	}
 	
-	private String getCurrentPhasesOrderInJunction() {
-		List<PhaseAgent> phaseAgentsList = junctionAgent.getPhaseAgentsList();
-		
-		String phasesOrder = phaseAgentsList.get(0).getPhaseId();
-		for(int i = 1; i < phaseAgentsList.size(); i++){
-			phasesOrder += "," + phaseAgentsList.get(i).getPhaseId();
-		}
-		return phasesOrder;
-	}
-	
-	private void sendLaneChangedPriorityMessage(String lanesAffected, String phasesOrder, int priority) {	
-		String messageContent = priority + "#" + lanesAffected + "#" + phasesOrder;
+	private void sendLaneChangedNumVehMessage(String laneId, int numVeh) {	
+		String messageContent = laneId + "#" + numVeh;
 		
 		for(PhaseAgent phase:junctionAgent.getPhaseAgentsList()){			
 			AID receiverPhase = AIDManager.getPhaseAID(phase.getPhaseId(), junctionAgent);
@@ -84,6 +59,8 @@ public class JunctionRequestMessageBehaviour extends CyclicBehaviour{
 			junctionAgent.send(request);
 		}
 	}
+	
+	//TODO: Fix up and down queue
 
 	private void phaseRequestedUpInQueue(ACLMessage msg) {
 		// Message Format: phaseId

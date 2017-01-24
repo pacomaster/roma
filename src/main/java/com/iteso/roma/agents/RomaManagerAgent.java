@@ -72,10 +72,15 @@ public class RomaManagerAgent extends Agent{
 		Phase pha3 = new Phase(t3);
 		Phase pha4 = new Phase(t4);
 		
-		PhaseAgent phaseAgent1 = new PhaseAgent("pha1","J5",pha1);	
-		PhaseAgent phaseAgent2 = new PhaseAgent("pha2","J5",pha2);
-		PhaseAgent phaseAgent3 = new PhaseAgent("pha3","J5",pha3);	
-		PhaseAgent phaseAgent4 = new PhaseAgent("pha4","J5",pha4);
+		String[] lanesAffectedPhase1 = {"E1_0", "E5_0"};
+		String[] lanesAffectedPhase2 = {"E1_1", "E5_1"};
+		String[] lanesAffectedPhase3 = {"E3_0", "E7_0"};
+		String[] lanesAffectedPhase4 = {"E3_1", "E7_1"};
+		
+		PhaseAgent phaseAgent1 = new PhaseAgent("pha1","J5",pha1, lanesAffectedPhase1);	
+		PhaseAgent phaseAgent2 = new PhaseAgent("pha2","J5",pha2, lanesAffectedPhase2);
+		PhaseAgent phaseAgent3 = new PhaseAgent("pha3","J5",pha3, lanesAffectedPhase3);	
+		PhaseAgent phaseAgent4 = new PhaseAgent("pha4","J5",pha4, lanesAffectedPhase4);
 		
 		ArrayList<PhaseAgent> phasesList = new ArrayList<PhaseAgent>();
 		phasesList.add(phaseAgent1);

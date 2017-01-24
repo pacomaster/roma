@@ -1,7 +1,5 @@
 package com.iteso.roma.agents.behaviours;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.iteso.roma.agents.PhaseAgent;
 import com.iteso.roma.jade.ConversationIds;
 import com.iteso.roma.sumo.Phase;
@@ -29,45 +27,20 @@ public class PhaseRequestMessageBehaviour extends CyclicBehaviour {
 			String conversationId = msg.getConversationId();
 			
 			// Request to provide phase values and times
-			if(conversationId.equals(ConversationIds.PHASE_VALUES_TIMES)){					
+			if(conversationId.equals(ConversationIds.PHASE_VALUES_VEH)){					
 				/*
-				 * Sends the inform to junction about phase values and times
+				 * Sends the inform to junction about phase veh
 				 * 
 				 * Type: INFORM
 				 * To: Junction
-				 * Subject: PHASE_VALUES_TIMES
-				 * Message: [phaseValues]#[phaseTimes]
+				 * Subject: PHASE_VALUES_VEH
+				 * Message: phaseId,vehNum
 				 */
 				ACLMessage reply = msg.createReply();
-				reply.setPerformative(ACLMessage.INFORM);
-				String msgValues = StringUtils.join(phase.getStates(),",");
-				String msgTimes = String.valueOf(phase.getTimes()[0]);
-				for(int i = 1; i < phase.getTimes().length; i++){
-					msgTimes += "," + phase.getTimes()[i];
-				}									
-				reply.setContent(msgValues + "#" + msgTimes);					
+				reply.setPerformative(ACLMessage.INFORM);									
+				reply.setContent(phaseAgent.getPhaseId() + "," + phaseAgent.getTotalVeh());					
 				myAgent.send(reply);
-				phase.setGreenTime(phaseAgent.MIDDLE);
 			}
-			
-			// Request to change the priority from JunctionAgent				
-			if(conversationId.equals(ConversationIds.LANE_CHANGE_NUM_VEH)){
-				/*
-				 * Notify junction that accepts to change the priority and starts coordination
-				 * 
-				 * Type: INFORM
-				 * To: Junction
-				 * Subject: lane-change-priority
-				 * Message: [phaseId]
-				 */
-				ACLMessage reply = msg.createReply();
-				reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-				reply.setContent(phaseAgent.getPhaseId());
-				myAgent.send(reply);
-				
-				// Start coordination with change priority
-				myAgent.addBehaviour(new PhaseCoordinationBehaviour(myAgent));
-			}
-		}			
+		}					
 	}
 }

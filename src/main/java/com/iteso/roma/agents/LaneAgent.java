@@ -20,7 +20,7 @@ public class LaneAgent extends Agent{
 	String junctionId;	
 	int currentPriority = 1;
 	int numberVehicles = 0;
-	public static int cycleTimer = 60;
+	public static int cycleTimer = 15;
 	
 	/**
 	 * Constructor

@@ -1,10 +1,10 @@
 package com.iteso.roma.agents.behaviours;
 
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 import com.iteso.roma.agents.LaneAgent;
 import com.iteso.roma.jade.ConversationIds;
-import com.iteso.roma.sumo.VehicleAttributes;
 import com.iteso.roma.utils.ACLMessageFactory;
 import com.iteso.roma.utils.AIDManager;
 
@@ -17,7 +17,7 @@ import trasmapi.sumo.SumoCom;
 @SuppressWarnings("serial")
 public class LaneVehiclesCheckerBehaviour extends TickerBehaviour{
 	
-	private static final Logger logger = Logger.getLogger(LaneVehiclesCheckerBehaviour.class.getName());
+	private static final Logger _logger = Logger.getLogger(LaneVehiclesCheckerBehaviour.class.getName());
 	
 	private LaneAgent laneAgent;
 	private int nextCycle;
@@ -33,19 +33,20 @@ public class LaneVehiclesCheckerBehaviour extends TickerBehaviour{
 		int sumoTimeFull = SumoCom.getCurrentSimStep();
 		int sumoTime = sumoTimeFull / 1000;
 		
-		// Every 60 seconds in the simulation should check how many cars are in the lane and change the priority
+		// Every cycle in the simulation should check how many cars are in the lane and change the priority
 		if(sumoTime > nextCycle){
 			nextCycle += LaneAgent.cycleTimer;
 			checkCarsInLane();
+			//logLaneStatus();
 		}
 	}
 	
 	private void checkCarsInLane(){
 		int numVeh = calculateLaneVehicles(laneAgent);
-		laneAgent.setNumberVehicles(numVeh);			
-		sendNumberVehiclesInLane();			
-//		logger.fine(ConversationIds.LANE_CHANGE_NUM_VEH + ": " + laneAgent.getLaneId() + "," + laneAgent.getNumberVehicles());
-//		System.out.println(ConversationIds.LANE_CHANGE_NUM_VEH + ": " + laneAgent.getLaneId() + "," + laneAgent.getNumberVehicles());
+		if(numVeh != laneAgent.getNumberVehicles()){
+			laneAgent.setNumberVehicles(numVeh);			
+			sendNumberVehiclesInLane();
+		}
 	}
 
 	private int calculateLaneVehicles(LaneAgent laneAgent) {
@@ -58,8 +59,13 @@ public class LaneVehiclesCheckerBehaviour extends TickerBehaviour{
 		AID receiverJunction = AIDManager.getJunctionAID(laneAgent.getJunctionId(), laneAgent);
 		String messageContent = laneAgent.getLaneId() + "," + laneAgent.getNumberVehicles();
 		
-		ACLMessage request = ACLMessageFactory.createRequestMsg(receiverJunction, messageContent, ConversationIds.LANE_CHANGE_NUM_VEH);
-		laneAgent.send(request);
+		ACLMessage inform = ACLMessageFactory.createInformMsg(receiverJunction, messageContent, ConversationIds.LANE_CHANGE_NUM_VEH);
+		laneAgent.send(inform);
+		ACLMessageFactory.logMessage(inform);
+	}
+	
+	private void logLaneStatus(){
+		_logger.info(laneAgent.getLaneId() + " - " + laneAgent.getNumberVehicles());
 	}
 
 }

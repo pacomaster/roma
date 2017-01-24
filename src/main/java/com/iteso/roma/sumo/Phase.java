@@ -70,5 +70,14 @@ public class Phase {
 		}
 		return times;
 	}
+	
+	public int getTotalTime(){
+		int[] times = new int[this.states.length];
+		int total = 0;
+		for(int i = 0; i < this.states.length; i++){
+			total += this.states[i].getTime();
+		}
+		return total;
+	}
 
 }

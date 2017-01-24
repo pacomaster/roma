@@ -41,7 +41,7 @@ public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 			MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 			ACLMessage msg = junctionAgent.receive(mt);
 			
-			if(msg != null && msg.getConversationId().equals(ConversationIds.PHASE_VALUES_TIMES)){				
+			if(msg != null && msg.getConversationId().equals(ConversationIds.PHASE_VALUES_VEH)){				
 				processMessage(msg);				
 				step++;
 			}else{
@@ -66,7 +66,7 @@ public class JunctionRequestPhaseTimeBehaviour extends Behaviour{
 		 * Subject: PHASE_VALUES_TIMES
 		 * Message: Next Phase
 		 */
-		ACLMessage request = ACLMessageFactory.createRequestMsg(receiver, "Next Phase", ConversationIds.PHASE_VALUES_TIMES);
+		ACLMessage request = ACLMessageFactory.createRequestMsg(receiver, "Next Phase", ConversationIds.PHASE_VALUES_VEH);
 		myAgent.send(request);
 	}
 	

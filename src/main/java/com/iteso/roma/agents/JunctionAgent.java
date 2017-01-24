@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.iteso.roma.agents.behaviours.JunctionChangePhaseBehaviour;
+import com.iteso.roma.agents.behaviours.JunctionInformMessageBehaviour;
 import com.iteso.roma.agents.behaviours.JunctionRequestMessageBehaviour;
 import com.iteso.roma.jade.ServiceRegister;
 import com.iteso.roma.sumo.Phase;
@@ -54,6 +55,7 @@ public class JunctionAgent extends Agent{
 	private Phase nextPhase;
 	private int firstCycle;
 	private boolean isFixed = true;
+	public int[] waitTime; 
 
 	/**
 	 * This list contains the next phase to put into the traffic light
@@ -75,6 +77,8 @@ public class JunctionAgent extends Agent{
 		this.nextPhase = currentPhase;
 		this.phaseAgentsList = phasesList;
 		firstCycle = this.currentPhase.getGreenTime();
+		
+		this.waitTime = new int[phasesList.size()];
 	}
 	
 	/**
@@ -83,7 +87,8 @@ public class JunctionAgent extends Agent{
 	protected void setup(){		
 		ServiceRegister.register(this, junctionId);		
 		addBehaviour(new JunctionChangePhaseBehaviour(this, TimeManager.getSeconds(1), firstCycle));		
-		addBehaviour(new JunctionRequestMessageBehaviour(this));
+		//addBehaviour(new JunctionRequestMessageBehaviour(this));
+		addBehaviour(new JunctionInformMessageBehaviour(this));
 	}
 	
 	public String getJunctionId() {

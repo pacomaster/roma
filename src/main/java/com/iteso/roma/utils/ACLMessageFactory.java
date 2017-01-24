@@ -1,9 +1,14 @@
 package com.iteso.roma.utils;
 
+import java.util.Iterator;
+import java.util.logging.Logger;
+
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 
 public class ACLMessageFactory {
+	
+	private static final Logger _logger = Logger.getLogger(ACLMessageFactory.class.getName());
 
 	public static ACLMessage createRequestMsg(AID receiver, String content, String conversationId){
 		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
@@ -75,5 +80,17 @@ public class ACLMessageFactory {
 		request.setConversationId(conversationId);
 		request.setReplyWith("reject_proposal-"+System.currentTimeMillis()); // Unique value
 		return request;
+	}
+	
+	public static void logMessage(ACLMessage msg){
+		if(false){
+			Iterator<AID> ite = msg.getAllReceiver();
+			while(ite.hasNext()){
+				_logger.info(ACLMessage.getPerformative(msg.getPerformative()) + ": " 
+						+ msg.getSender().getLocalName() + " -> " 
+						+ ite.next().getLocalName() + " (" 
+						+ msg.getContent() + ")");			
+			}	
+		}
 	}
 }
