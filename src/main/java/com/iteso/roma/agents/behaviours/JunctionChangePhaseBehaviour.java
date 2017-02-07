@@ -56,7 +56,24 @@ public class JunctionChangePhaseBehaviour extends TickerBehaviour{
 //		junctionAgent.getPhaseAgentsList().add(junctionAgent.getPhaseAgentsList().get(0));
 //		junctionAgent.getPhaseAgentsList().remove(0);
 		
-//		ALWAYS MAX VEH
+		
+		_logger.info("###############");	
+//		int maxIndex = nextMaxVeh(phases);		
+		int maxIndex = nextPonderate(phases);		
+
+		setWaitTimes(maxIndex, phases);
+
+		junctionAgent.setCurrentPhase(phases.get(maxIndex).getPhase());
+		
+		logTotals();
+		logWaitTimes();
+		_logger.info(" ");
+		_logger.info("SELECTED: " + phases.get(maxIndex).getPhaseId());
+
+		sendVehRequest();
+	}
+	
+	private int nextMaxVeh(List<PhaseAgent> phases){
 		int maxIndex = 0;
 		int maxVeh = 0;
 		int i = 0;
@@ -67,22 +84,37 @@ public class JunctionChangePhaseBehaviour extends TickerBehaviour{
 			}
 			i++;
 		}
-		
-		for(i = 0; i < junctionAgent.waitTime.length; i++){
-			if(i != maxIndex){
-				junctionAgent.waitTime[i] += phases.get(maxIndex).getPhase().getTotalTime();
-			}else{
-				junctionAgent.waitTime[i] = 0;
-			}				
+		return maxIndex;
+	}
+	
+	private int nextPonderate(List<PhaseAgent> phases){
+		int maxIndex = 0;
+		double maxValue = 0;
+		int i = 0;
+		_logger.info("CALCULATED TIMES");
+		for(PhaseAgent phase : phases){
+			//double calculatedValue = phase.getTotalVeh() * Math.sqrt(phase.getWaitTime());
+			double calculatedValue = (phase.getTotalVeh() * 0.8) + (phase.getWaitTime() * 0.2);
+			_logger.info(phase.getPhaseId() + " - " + calculatedValue);
+			if(calculatedValue > maxValue){
+				maxValue = calculatedValue;
+				maxIndex = i;
+			}
+			i++;
 		}
-		
-		logTotals();
-		logWaitTimes();
-		junctionAgent.setCurrentPhase(phases.get(maxIndex).getPhase());
-		_logger.info(" ");
-		_logger.info("SELECTED: " + phases.get(maxIndex).getPhaseId());
-
-		sendVehRequest();
+		return maxIndex;
+	}
+	
+	private void setWaitTimes(int maxIndex, List<PhaseAgent> phases){
+		int i = 0;
+		for(PhaseAgent phase : phases){
+			if(i != maxIndex){
+				phase.setWaitTime(phase.getWaitTime() + phases.get(maxIndex).getPhase().getTotalTime());
+			}else{
+				phase.setWaitTime(1);
+			}
+			i++;
+		}
 	}
 	
 	private void sendVehRequest() {
@@ -107,7 +139,7 @@ public class JunctionChangePhaseBehaviour extends TickerBehaviour{
 	}
 	
 	private void logTotals(){
-		_logger.info("###############");
+		_logger.info(" ");
 		_logger.info("TOTALS");
 		for(PhaseAgent phase : junctionAgent.getPhaseAgentsList()){
 			_logger.info(phase.getPhaseId() + " - " + phase.getTotalVeh());
@@ -117,10 +149,8 @@ public class JunctionChangePhaseBehaviour extends TickerBehaviour{
 	private void logWaitTimes(){
 		_logger.info(" ");
 		_logger.info("WAIT TIMES");
-		int i = 0;
 		for(PhaseAgent phase : junctionAgent.getPhaseAgentsList()){
-			_logger.info(phase.getPhaseId() + " - " + junctionAgent.waitTime[i]);
-			i++;
+			_logger.info(phase.getPhaseId() + " - " + phase.getWaitTime());
 		}
 	}
 

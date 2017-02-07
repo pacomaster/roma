@@ -1,5 +1,5 @@
-staticData <- read.csv("C:\\Users\\Francisco\\git\\roma\\romaSimulations\\data\\trip.csv", stringsAsFactors=F)
-dynamicData <- read.csv("C:\\Users\\Francisco\\git\\roma\\romaSimulations\\data\\trip2.csv", stringsAsFactors=F)
+staticData <- read.csv("C:\\Users\\Francisco\\git\\roma\\romaSimulations\\data\\trip8020.csv", stringsAsFactors=F)
+dynamicData <- read.csv("C:\\Users\\Francisco\\git\\roma\\romaSimulations\\data\\trips\\trip2.csv", stringsAsFactors=F)
 
 staticData <- read.csv("C:\\Users\\famezcua\\PROJECTS\\Master ITESO\\sumo-0.25.0\\bin\\data\\trip.csv", stringsAsFactors=F)
 

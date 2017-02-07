@@ -39,6 +39,7 @@ public class PhaseAgent extends Agent{
 	private String[] lanesAffected;
 	private int[] lanesAffectedVeh;
 	private int totalVeh;
+	private int waitTime;
 
 	/**
 	 * Constructor
@@ -91,5 +92,13 @@ public class PhaseAgent extends Agent{
 
 	public void setTotalVeh(int totalVeh) {
 		this.totalVeh = totalVeh;
+	}
+	
+	public int getWaitTime() {
+		return waitTime;
+	}
+
+	public void setWaitTime(int waitTime) {
+		this.waitTime = waitTime;
 	}
 }

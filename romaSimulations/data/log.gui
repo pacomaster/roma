@@ -3,11 +3,11 @@ Loading net-file from 'romaSimulations\data\romaBasic.net.xml'...  done (2ms).
 Loading done.
 Simulation started with time: 0.00
 Performance: 
- Duration: 123422ms
- Real time factor: 8.92872
- UPS: 401.557259
+ Duration: 375972ms
+ Real time factor: 9.5805
+ UPS: 414.786207
 Vehicles: 
- Inserted: 883 (Loaded: 1177)
+ Inserted: 2873 (Loaded: 3427)
  Running: 45
- Waiting: 181
+ Waiting: 553
 
