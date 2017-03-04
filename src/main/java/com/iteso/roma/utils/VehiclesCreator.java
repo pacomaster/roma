@@ -10,7 +10,8 @@ public class VehiclesCreator {
 	
 	static final String TYPE = "CarC";
 	static final String VEHICLE_PREFIX = "v";
-
+	static final Double CARS_PER_HOUR = 100.0;
+	
 	static int finalSimulationStep = 14400;
 	static int multiplicationOfVehicles = 1;
 	static int vehicleIdCounter = 1;
@@ -31,7 +32,7 @@ public class VehiclesCreator {
 			for(int i = 0; i < routeIds.length; i++){
 				int rou = routeIds[i];
 				String route = "rou" + rou;
-				int cars = getCarsPerCluster(step, routeCluster[i]);
+				int cars = getCarsPerCluster(step, routeCluster[i], routePercentage[i]);
 				for(int c = 0; c < cars; c++){
 					bw.write("<vehicle id=\"" + VEHICLE_PREFIX + vehicleIdCounter + "\" depart=\"" + step + "\" route=\"" + route + "\" type=\"" + TYPE + "\"/>");
 					bw.newLine();
@@ -61,13 +62,14 @@ public class VehiclesCreator {
 		bw.close();
 	}
 	
-	public static int getCarsPerCluster(int step, int cluster){
-		if(cluster == 1){
-			return clusterLow(step);
-		}else if(cluster == 2){
-			return clusterMedium(step);
-		}else{
-			return clusterHigh(step);
+	public static int getCarsPerCluster(int step, int cluster, double percentage){
+		
+		switch(cluster){
+			case 0: return clusterStatic(step, percentage);
+			case 1: return clusterLow(step);
+			case 2: return clusterMedium(step);
+			case 3: return clusterHigh(step);
+			default: return clusterStatic(step);
 		}
 	}
 	
@@ -121,6 +123,21 @@ public class VehiclesCreator {
 		int indexTruncate = index.intValue();
 		
 		Double carsPerHour = clusterValues[indexTruncate];
+		Double carsPerHourPercentage = carsPerHour * percentage;
+		Double carsPerMinute = carsPerHourPercentage / 60;
+		
+		int carsPerMinuteTruncate = carsPerMinute.intValue();
+		return carsPerMinuteTruncate;
+	}
+	
+	public static int clusterStatic(int step){
+		return clusterStatic(step, 1);
+	}
+	
+	public static int clusterStatic(int step, double percentage){
+
+		
+		Double carsPerHour = CARS_PER_HOUR;
 		Double carsPerHourPercentage = carsPerHour * percentage;
 		Double carsPerMinute = carsPerHourPercentage / 60;
 		
