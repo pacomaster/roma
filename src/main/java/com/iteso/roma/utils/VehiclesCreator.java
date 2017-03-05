@@ -10,28 +10,31 @@ public class VehiclesCreator {
 	
 	static final String TYPE = "CarC";
 	static final String VEHICLE_PREFIX = "v";
-
-	static int finalSimulationStep = 14400;
+	static final Double CARS_PER_HOUR = 900.0;
+	
+	static int finalSimulationStep = 7200; //14400;
 	static int multiplicationOfVehicles = 1;
 	static int vehicleIdCounter = 1;
 	static int simulationJump = 60;
 	
-	static int[] routeIds = {1,3,5,7};
-	static int[] routeCluster = {3,1,3,1};
-	static int[] routePercentage = {1,1,1,1};
+	static int[] routeIds = {1, 3, 5, 7};
+	static int[] routeCluster = {0, 0, 0, 0};
+	static double[] routePercentage = {1.0, 0.5, 1.0, 0.5};
 
 	public static void main(String[] args) throws IOException {
 		
-		File fout = new File("rou.xml");
+		File fout = new File("romaSimulations\\data\\rou_" + CARS_PER_HOUR.intValue() + ".xml");
 		FileOutputStream fos = new FileOutputStream(fout);
 	 
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+		
+		header(bw);
 		
 		for(int step = 0; step < finalSimulationStep; step += simulationJump){
 			for(int i = 0; i < routeIds.length; i++){
 				int rou = routeIds[i];
 				String route = "rou" + rou;
-				int cars = getCarsPerCluster(step, routeCluster[i]);
+				int cars = getCarsPerCluster(step, routeCluster[i], routePercentage[i]);
 				for(int c = 0; c < cars; c++){
 					bw.write("<vehicle id=\"" + VEHICLE_PREFIX + vehicleIdCounter + "\" depart=\"" + step + "\" route=\"" + route + "\" type=\"" + TYPE + "\"/>");
 					bw.newLine();
@@ -58,16 +61,21 @@ public class VehiclesCreator {
 //				vehicleIdCounter++;				
 //			}
 //		}
+		
+		bw.write("</routes>");
+		
 		bw.close();
+		System.out.println("END");
 	}
 	
-	public static int getCarsPerCluster(int step, int cluster){
-		if(cluster == 1){
-			return clusterLow(step);
-		}else if(cluster == 2){
-			return clusterMedium(step);
-		}else{
-			return clusterHigh(step);
+	public static int getCarsPerCluster(int step, int cluster, double percentage){
+		
+		switch(cluster){
+			case 0: return clusterStatic(step, percentage);
+			case 1: return clusterLow(step);
+			case 2: return clusterMedium(step);
+			case 3: return clusterHigh(step);
+			default: return clusterStatic(step);
 		}
 	}
 	
@@ -126,6 +134,30 @@ public class VehiclesCreator {
 		
 		int carsPerMinuteTruncate = carsPerMinute.intValue();
 		return carsPerMinuteTruncate;
+	}
+	
+	public static int clusterStatic(int step){
+		return clusterStatic(step, 1);
+	}
+	
+	public static int clusterStatic(int step, double percentage){
+
+		
+		Double carsPerHour = CARS_PER_HOUR;
+		Double carsPerHourPercentage = carsPerHour * percentage;
+		Double carsPerMinute = carsPerHourPercentage / 60;
+		
+		int carsPerMinuteTruncate = carsPerMinute.intValue();
+		return carsPerMinuteTruncate;
+	}
+	
+	public static void header (BufferedWriter bw) throws IOException{
+		bw.write("<routes>");
+		bw.newLine();
+		bw.write("<vType accel=\"2.6\" decel=\"4.5\" id=\"CarA\" length=\"6.0\" minGap=\"2.5\" maxSpeed=\"40.0\" sigma=\"0.5\" /><vType accel=\"2.6\" decel=\"4.5\" id=\"CarB\" length=\"5.5\" minGap=\"2.5\" maxSpeed=\"40.0\" sigma=\"0.5\" /><vType accel=\"2.6\" decel=\"4.5\" id=\"CarC\" length=\"5.0\" minGap=\"2.5\" maxSpeed=\"40.0\" sigma=\"0.5\" /><vType accel=\"2.6\" decel=\"4.5\" id=\"CarD\" length=\"4.5\" minGap=\"2.5\" maxSpeed=\"40.0\" sigma=\"0.5\" />");
+		bw.newLine();
+		bw.write("<route id=\"rou1\" edges=\"E1 E6\"/><route id=\"rou2\" edges=\"E1 E4\"/><route id=\"rou3\" edges=\"E3 E8\"/><route id=\"rou4\" edges=\"E3 E6\"/><route id=\"rou5\" edges=\"E5 E2\"/><route id=\"rou6\" edges=\"E5 E8\"/><route id=\"rou7\" edges=\"E7 E4\"/><route id=\"rou8\" edges=\"E7 E2\"/><route id=\"rou9\" edges=\"E1 E8\"/>	<route id=\"rou10\" edges=\"E3 E2\"/><route id=\"rou11\" edges=\"E5 E4\"/><route id=\"rou12\" edges=\"E7 E6\"/>");
+		bw.newLine();
 	}
 	
 }
