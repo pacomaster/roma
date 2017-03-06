@@ -55,6 +55,8 @@ public class PhaseAgent extends Agent{
 	private final int MAX;
 	private final int UNIT;
 	
+	private final boolean _isDynamicTrafficLight = false;
+	
 	private String phaseId;
 	private String junctionId;
 	
@@ -237,7 +239,8 @@ public class PhaseAgent extends Agent{
 					//myAgent.send(reply);
 					
 					// Start coordination with change priority
-					//myAgent.addBehaviour(new Coordination(msg.getContent()));
+					// IMPORTANT: COMMENT FOR STATIC
+					if(_isDynamicTrafficLight)myAgent.addBehaviour(new Coordination(msg.getContent()));
 				}
 			}			
 		}

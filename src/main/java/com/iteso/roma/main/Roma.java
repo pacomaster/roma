@@ -117,7 +117,7 @@ public class Roma {
 		List<String> params = new ArrayList<String>();
 		params.add("-c=romaSimulations\\data\\romaBasic.sumo.cfg");
 		params.add("--device.emissions.probability=1.0");
-        params.add("--tripinfo-output=romaSimulations\\data\\trip.xml");
+        params.add("--tripinfo-output=romaSimulations\\data\\trip_500.xml");
 		sumo.addParameters(params);
 		sumo.addConnections("localhost", 8820);
 

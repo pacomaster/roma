@@ -78,7 +78,8 @@ public class LaneAgent extends Agent{
 					double minGap = 2.5;
 					
 					int priority = (int) (((avgVehLength * numVeh + minGap * numVeh) / laneLength) * 5.0) + 1;
-					if(currentPriority != priority){
+					//if(currentPriority != priority){
+					if(true){
 						currentPriority = priority;
 						/*
 						 * Sends message to Junction for priority

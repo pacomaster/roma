@@ -17,8 +17,8 @@ public class XMLReader {
 
 	public static void main(String[] args) {
 		try {
-
-			File fXmlFile = new File("romaSimulations/data/trip2_1000.xml");
+			String name = "trip_1000";
+			File fXmlFile = new File("romaSimulations/data/" + name + ".xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(fXmlFile);
@@ -32,11 +32,11 @@ public class XMLReader {
 			BufferedWriter bw = null;
 		    PrintWriter writer = null;
 			try{
-				fw = new FileWriter(new File("romaSimulations/data/trip2_1000.csv"), true);
+				fw = new FileWriter(new File("romaSimulations/data/" + name + ".csv"), true);
 				bw = new BufferedWriter(fw);
 	    	    writer = new PrintWriter(bw);
 	    	    
-	    	    writer.println("id,duration,timeLoss,departLane");
+	    	    writer.println("id,duration,timeLoss,depart,arrival,departLane");
 	    	    
 	    	    for (int temp = 0; temp < nList.getLength(); temp++) {
 
@@ -44,7 +44,12 @@ public class XMLReader {
 					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 						Element eElement = (Element) nNode;
-				    	writer.println(eElement.getAttribute("id") + "," + eElement.getAttribute("duration") + "," + eElement.getAttribute("timeLoss") + "," + eElement.getAttribute("departLane"));
+				    	writer.println(eElement.getAttribute("id") + "," +
+				    			eElement.getAttribute("duration") + "," +
+				    			eElement.getAttribute("timeLoss") + "," +
+				    			eElement.getAttribute("depart") + "," +
+				    			eElement.getAttribute("arrival") + "," +
+				    			eElement.getAttribute("departLane"));
 
 					}
 				}

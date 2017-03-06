@@ -1,8 +1,17 @@
 package com.iteso.roma.agents;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import com.iteso.roma.utils.ACLMessageFactory;
 import com.iteso.roma.utils.AIDManager;
@@ -69,6 +78,7 @@ public class JunctionAgent extends Agent{
 	private int phaseStep = 0;
 	
 	private int nextCycle;
+	private int nextCarsCount = 100;
 	
 	/**
 	 * This list contains the next phase to put into the traffic light
@@ -119,6 +129,35 @@ public class JunctionAgent extends Agent{
 				if(sumoTime > nextCycle){					
 					changePhase(myAgent);					
 					logger.info(sumoTime + " " + junctionId + "-" + phasesList.get(0).getPhaseId() + " P: " + phaseStep + " nextCycle: " + phaseTimes[phaseStep]);
+				}
+			}
+		});
+		
+		// Create cars graphic
+		addBehaviour(new TickerBehaviour(this, TimeManager.getSeconds(1)) {
+			protected void onTick() {
+				int sumoTimeFull = SumoCom.getCurrentSimStep();
+				int sumoTime = sumoTimeFull / 1000;
+				
+				if(sumoTime > nextCarsCount){					
+					String name = "cars_500";
+					File f = new File("romaSimulations/data/" + name + ".csv");
+					boolean isNew = false;
+					if(!f.exists()) isNew = true;
+					try(FileWriter fw = new FileWriter(f, true);
+						    BufferedWriter bw = new BufferedWriter(fw);
+						    PrintWriter out = new PrintWriter(bw)){
+						
+							List<String> vehIds = SumoCom.getAllVehiclesIds();
+							int count = vehIds.size();
+							
+							if(isNew) out.println("time,cars");
+						
+						    out.println(nextCarsCount + "," + count);
+						} catch (IOException e) {
+						    //exception handling left as an exercise for the reader
+						}
+					nextCarsCount +=100;
 				}
 			}
 		});

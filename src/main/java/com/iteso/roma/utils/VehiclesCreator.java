@@ -10,7 +10,7 @@ public class VehiclesCreator {
 	
 	static final String TYPE = "CarC";
 	static final String VEHICLE_PREFIX = "v";
-	static final Double CARS_PER_HOUR = 100.0;
+	static final Double CARS_PER_HOUR =750.0;
 	
 	static int finalSimulationStep = 7200; //14400;
 	static int multiplicationOfVehicles = 1;
