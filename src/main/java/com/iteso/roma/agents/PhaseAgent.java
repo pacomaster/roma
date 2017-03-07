@@ -55,7 +55,7 @@ public class PhaseAgent extends Agent{
 	private final int MAX;
 	private final int UNIT;
 	
-	private final boolean _isDynamicTrafficLight = false;
+	private final boolean _isDynamicTrafficLight = true;
 	
 	private String phaseId;
 	private String junctionId;
@@ -380,12 +380,15 @@ public class PhaseAgent extends Agent{
 						if(offerTime == -1) offerTime = getOffer(); // Get offer time value only first time						
 						if(offerTime > 0){							
 							// Send CFP to next stageId in the top of the list
-							
-							ACLMessage request = ACLMessageFactory.createCFPMsg(AIDManager.getPhaseAID(agents[currentAgent], myAgent), "1", "stage-coordination");
-							myAgent.send(request);
-							step++;
-							
-							System.out.println("phaAge: " + phaseId + " offers 1 unit to  " + agents[currentAgent]);
+							if(currentAgent < agents.length ){
+								ACLMessage request = ACLMessageFactory.createCFPMsg(AIDManager.getPhaseAID(agents[currentAgent], myAgent), "1", "stage-coordination");
+								myAgent.send(request);
+								step++;
+								
+								System.out.println("phaAge: " + phaseId + " offers 1 unit to  " + agents[currentAgent]);
+							}else{
+								step = END_STEP;
+							}
 							
 						}else{							
 							// If the phase cannot offer any time the coordination is cancelled.
